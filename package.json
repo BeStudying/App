@@ -9,11 +9,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@dorian-eydoux/pronote-api": "^2.3.4",
+    "@expo/webpack-config": "^0.17.2",
+    "@react-navigation/bottom-tabs": "^6.4.0",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native-stack": "^6.9.1",
+    "@react-navigation/stack": "^6.3.4",
     "expo": "~47.0.6",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-dom": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-paper": "^4.12.5",
+    "react-native-safe-area-view": "^1.1.1",
+    "react-native-web": "~0.18.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
