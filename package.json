@@ -21,12 +21,15 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
+    "react-native-material-dropdown": "^0.11.1",
     "react-native-paper": "^4.12.5",
     "react-native-safe-area-view": "^1.1.1",
+    "react-native-select-dropdown": "^3.0.3",
     "react-native-web": "~0.18.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "react-router-dom": "^6.4.3"
   },
   "private": true
 }

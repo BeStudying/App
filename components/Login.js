@@ -5,11 +5,19 @@ import Constants from 'expo-constants'
 import Main from './Main';
 
 export default function Login() {
+    let data = [{
+        value: 'Banana',
+      }, {
+        value: 'Mango',
+      }, {
+        value: 'Pear',
+      }];
     return (
+        <View>
         <Card style={styles.container}>
             <Text style={styles.title}>Connexion</Text>
-            <Text style={styles.paragraph}>Veuillez vous authentifier grâce à<br></br>
-                <Text style={{fontWeight: 'bold', color: 'green'}}>PRONOTE</Text>
+            <Text style={styles.paragraph}>Veuillez vous authentifier grâce à
+                <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text>
             </Text>
             <TextInput
                 style={styles.input}
@@ -21,6 +29,7 @@ export default function Login() {
             />
             <Button title='Se Connecter' color='green' style={styles.title} onPress={tryLogin}/>
         </Card>
+        </View>
     );
 }
 
@@ -33,7 +42,11 @@ function tryLogin(){
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        paddingTop: Constants.statusBarHeight
+        marginBottom: '75%',
+        borderRadius: '15px',
+        width: "94%",
+        marginLeft: "3%",
+        // paddingTop: Constants.statusBarHeight
     },
     title: {
         fontSize: 18,
