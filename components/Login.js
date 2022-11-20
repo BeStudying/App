@@ -19,13 +19,18 @@ export default function Login(props) {
                     style={styles.input}
                     placeholder="Mot de Passe"
                 />
-                <Button title='Se Connecter' color='green' onPress={() => props.navigation.navigate('Home')}/>
+                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation)}/>
             </Card>
         </SafeAreaView>
     );
 }
 
-function tryLogin(){
+function tryLogin(navigation){
+    navigation.navigate('Home')
+    navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+    });
 }
 
 const styles = StyleSheet.create({
