@@ -1,18 +1,9 @@
 import React from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, StyleSheet, Text, TextInput } from 'react-native';
 import { Card } from 'react-native-paper';
-import Main from './Main';
 
 export default function Login() {
-    let data = [{
-        value: 'Banana',
-      }, {
-        value: 'Mango',
-      }, {
-        value: 'Pear',
-      }];
     return (
-        <View>
         <Card style={styles.container}>
             <Text style={styles.title}>Connexion</Text>
             <Text style={styles.paragraph}>Veuillez vous authentifier grâce à
@@ -28,14 +19,11 @@ export default function Login() {
             />
             <Button title='Se Connecter' color='green' style={styles.title} onPress={tryLogin}/>
         </Card>
-        </View>
     );
 }
 
 function tryLogin(){
-    return (
-        <Main/>
-    );
+    
 }
 
 const styles = StyleSheet.create({
@@ -45,7 +33,6 @@ const styles = StyleSheet.create({
         borderRadius: '15px',
         width: "94%",
         marginLeft: "3%",
-        // paddingTop: Constants.statusBarHeight
     },
     title: {
         fontSize: 18,

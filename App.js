@@ -7,7 +7,7 @@ import Login from './components/Login'
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <View style={styles.app}>
       <Header/>
       <Login/>
     </View>
@@ -15,7 +15,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  app: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ecf0f1',

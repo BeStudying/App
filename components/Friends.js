@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, ScrollView, View } from 'react-native';
 import { Card } from 'react-native-paper';
 
 export default function Friends({ navigation }) {
   return (
-    <View>
+    <ScrollView>
       <Card style={{margin: 15, padding: 25}}>
         <Text>Amis 1</Text>
       </Card>
@@ -32,6 +32,12 @@ export default function Friends({ navigation }) {
       <Card style={{margin: 15, padding: 25}}>
         <Text>Amis 9</Text>
       </Card>
-    </View>
+    </ScrollView>
   );  
 }
+
+const styles = StyleSheet.create({
+    container: {
+      width: "100%",
+    }
+})
