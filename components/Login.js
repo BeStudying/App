@@ -1,17 +1,10 @@
 import React from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useNavigationContainerRef } from '@react-navigation/native';
 import { Card } from 'react-native-paper';
-import Constants from 'expo-constants'
-import Main from './Main';
+
 
 export default function Login() {
-    let data = [{
-        value: 'Banana',
-      }, {
-        value: 'Mango',
-      }, {
-        value: 'Pear',
-      }];
     return (
         <View>
         <Card style={styles.container}>
@@ -34,9 +27,6 @@ export default function Login() {
 }
 
 function tryLogin(){
-    return (
-        <Main/>
-    );
 }
 
 const styles = StyleSheet.create({

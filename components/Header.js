@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,26 +11,23 @@ function HomeScreen() {
 
 export default function Header() {
     return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Header"
-          component={HomeScreen}
-          headerStyle={{
-            position: "relative",
-          }}
-          options={{
-            title: 'BeStudy.',
-            headerStyle: {
-              backgroundColor: 'green',
-            },
-            headerTintColor: 'white',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="Header"
+                    component={HomeScreen}
+                    options={{
+                        title: 'BeStudy.',
+                        headerStyle: {
+                            backgroundColor: 'green',
+                        },
+                        headerTintColor: 'white',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                        },
+                    }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
   }
