@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Text, TextInput, Alert, StyleSheet } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
 import { Card } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,16 +9,20 @@ export default function Login(props) {
         <SafeAreaView>
             <Card style={styles.container}>
                 <Text style={styles.title}>Connexion</Text>
-                <Text style={styles.paragraph}>Veuillez vous authentifier grâce à
-                    <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text>
+                <Text style={styles.paragraph}>Veuillez vous authentifier à
+                    <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text> grâce à l'<Text style={{fontWeight: 'bold', color: '#00a2ff'}}>ENT</Text>
                 </Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Nom d'Utilisateur"
+                    placeholderTextColor="black" 
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Mot de Passe"
+                    placeholderTextColor="black" 
+                    secureTextEntry={true}
+                    cursorColor={'green'}
                 />
                 <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation)}/>
             </Card>
@@ -27,10 +32,12 @@ export default function Login(props) {
 
 function tryLogin(navigation){
     navigation.navigate('Home')
+    /* 
     navigation.reset({
         index: 0,
         routes: [{ name: 'Home' }],
     });
+    */
 }
 
 const styles = StyleSheet.create({
@@ -56,5 +63,7 @@ const styles = StyleSheet.create({
       margin: 12,
       borderWidth: 1,
       padding: 10,
+      borderRadius: '25px',
+      color: 'green',
     },
 });
