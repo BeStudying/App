@@ -1,23 +1,46 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Navigation from './components/Navigation';
-import Header from './components/Header';
-import Login from './components/Login';
+import Main from './components/Main';
+import Home from './components/Home';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.app}>
-      <Header/>
-      <View style={{paddingBottom: '62.85%'}}/>
-      <Login/>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator defaultScreenOptions={'Main'}>
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ 
+            title: 'BeStudy.', 
+            headerStyle: {
+              backgroundColor: 'green',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },  
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ 
+            title: 'BeStudy.', 
+            headerStyle: {
+              backgroundColor: 'green',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },  
+            headerBackVisible: false,
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  app: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-});

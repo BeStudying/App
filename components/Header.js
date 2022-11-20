@@ -1,26 +1,24 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
 
 export default function Header() {
     return (
-        <View style={styles.header}>
+        <View>
             <Text style={styles.title}>BeStudy.</Text>
         </View>
     );
   }
 
 const styles = StyleSheet.create({
-    header: {
-        position: 'relative',
-    },
     title: {
         color: 'white',
         textAlign: 'center',
         backgroundColor: 'green',
-        paddingTop: '2%',
+        paddingTop: Constants.statusBarHeight,
         paddingBottom: '3%',
         fontWeight: 'bold',
-        fontSize: '150%'
+        fontSize: '30%'
     }
 })
 

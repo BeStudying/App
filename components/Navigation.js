@@ -6,11 +6,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Alerts from './Alerts';
 import Friends from './Friends';
 
-const Tab = createBottomTabNavigator();
+export const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
   return (
-    <NavigationContainer>
       <Tab.Navigator initialRouteName="Amis" screenOptions={{
         tabBarActiveTintColor: 'green',
         headerShown: false
@@ -26,6 +25,5 @@ export default function Navigation() {
           )
         }}/>
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }

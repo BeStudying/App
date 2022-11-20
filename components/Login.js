@@ -1,29 +1,31 @@
 import React from 'react';
-import { Button, StyleSheet, Text, TextInput } from 'react-native';
+import { Button, Text, TextInput, Alert, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Login() {
+export default function Login(props) {
     return (
-        <Card style={styles.container}>
-            <Text style={styles.title}>Connexion</Text>
-            <Text style={styles.paragraph}>Veuillez vous authentifier grâce à
-                <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text>
-            </Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Nom d'Utilisateur"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Mot de Passe"
-            />
-            <Button title='Se Connecter' color='green' style={styles.title} onPress={tryLogin}/>
-        </Card>
+        <SafeAreaView>
+            <Card style={styles.container}>
+                <Text style={styles.title}>Connexion</Text>
+                <Text style={styles.paragraph}>Veuillez vous authentifier grâce à
+                    <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text>
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Nom d'Utilisateur"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Mot de Passe"
+                />
+                <Button title='Se Connecter' color='green' onPress={() => props.navigation.navigate('Home')}/>
+            </Card>
+        </SafeAreaView>
     );
 }
 
 function tryLogin(){
-
 }
 
 const styles = StyleSheet.create({
