@@ -9,36 +9,24 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator defaultScreenOptions={'Main'}>
+      <Stack.Navigator screenOptions={{
+          title: 'BeStudy.', 
+          headerStyle: {
+            backgroundColor: 'green',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },  
+          headerBackVisible: false,
+        }}>
         <Stack.Screen
           name="Main"
           component={Main}
-          options={{ 
-            title: 'BeStudy.', 
-            headerStyle: {
-              backgroundColor: 'green',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },  
-            headerBackVisible: false,
-          }}
         />
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ 
-            title: 'BeStudy.', 
-            headerStyle: {
-              backgroundColor: 'green',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },  
-            headerBackVisible: false,
-          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
