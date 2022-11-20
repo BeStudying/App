@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
-import { Button, Text, TextInput, Alert, StyleSheet } from 'react-native';
-import SelectDropdown from 'react-native-select-dropdown';
+import { Button, Text, TextInput, StyleSheet, SafeAreaView, View} from 'react-native';
 import { Card } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import getSchools from '../api/EducationAPI';
+import { Dropdown } from 'react-native-element-dropdown';
 
 export default function Login(props) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [ent, setENT] = useState(null);
+    const [isFocus, setIsFocusENT] = useState(false);
+  
+    const renderENT = () => (ent || isFocus) 
+        ? (<Text style={[styles.label, isFocus && { color: 'green' }]}>ENT</Text>) 
+        : null
+    const schools = async () => await getSchools('Lycée Jean Pierre Timbaud')
     return (
         <SafeAreaView>
             <Card style={styles.container}>
@@ -30,20 +37,46 @@ export default function Login(props) {
                     onChangeText={(newValue) => setPassword(newValue)}
                     cursorColor={'green'}
                 />
-                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password)}/>
+                <View style={{
+                    backgroundColor: 'white',
+                    padding: 10,
+                }}>
+                {renderENT()}
+                <Dropdown
+                    statusBarIsTranslucent={true}
+                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={[{label: 'ent.iledefrance.fr', value:'ent.iledefrance.fr'}]}
+                    search
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocus ? 'Sélectionner votre ENT' : '...'}
+                    searchPlaceholder="Rechercher"
+                    value={ent}
+                    onFocus={() => setIsFocusENT(true)}
+                    onBlur={() => setIsFocusENT(false)}
+                    onChange={(item) => {
+                        setENT(item.value);
+                        setIsFocusENT(false);
+                    }}
+                />
+                </View>
+                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password, ent)}/>
             </Card>
         </SafeAreaView>
     );
 }
 
-function tryLogin(navigation, username, password){
+function tryLogin(navigation, username, password, ent){
     navigation.navigate('Home')
-    /* 
     navigation.reset({
         index: 0,
         routes: [{ name: 'Home' }],
     });
-    */
 }
 
 const styles = StyleSheet.create({
@@ -67,9 +100,43 @@ const styles = StyleSheet.create({
     input: {
       height: 40,
       margin: 12,
-      borderWidth: 1,
       padding: 10,
-      borderRadius: '25px',
+      borderRadius: '8px',
+      borderColor: 'green',
+      borderWidth: 0.5,
       color: 'green',
+    },
+    dropdown: {
+        height: 50,
+        borderColor: 'green',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    label: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        left: 22,
+        top: 8,
+        zIndex: 999,
+        paddingHorizontal: 8,
+        fontSize: 14,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+    },
+    iconStyle: {
+        width: 20,
+        height: 20,
+    },
+    inputSearchStyle: {
+        height: 40,
+        fontSize: 16,
     },
 });
