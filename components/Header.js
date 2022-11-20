@@ -5,7 +5,7 @@ import Constants from 'expo-constants';
 export default function Header() {
     return (
         <View>
-            <Text style={styles.title}>BeStudy.</Text>
+            <Text style={styles.title}>BeStudying.</Text>
         </View>
     );
   }
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
                     name="Header"
                     component={HomeScreen}
                     options={{
-                        title: 'BeStudy.',
+                        title: 'BeStudying.',
                         headerStyle: {
                             backgroundColor: 'green',
                         },

@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{
-          title: 'BeStudy.', 
+          title: 'BeStudying.', 
           headerStyle: {
             backgroundColor: 'green',
           },
