@@ -7,15 +7,15 @@ import Login from './components/Login'
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <View style={styles.app}>
       <Header/>
-      <Navigation/>
+      <Login/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  app: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ecf0f1',

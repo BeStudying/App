@@ -3,14 +3,18 @@ import { View, Text, StyleSheet } from 'react-native';
 
 export default function Header() {
     return (
-        <View>
-            <Text style={styles.header}>BeStudy.</Text>
+        <View style={styles.header}>
+            <Text style={styles.title}>BeStudy.</Text>
         </View>
     );
   }
 
 const styles = StyleSheet.create({
     header: {
+        marginBottom: '65%',
+        position: 'relative',
+    },
+    title: {
         color: 'white',
         textAlign: 'center',
         backgroundColor: 'green',
