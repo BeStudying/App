@@ -24,7 +24,7 @@ export default function Login() {
 }
 
 function tryLogin(){
-    
+
 }
 
 const styles = StyleSheet.create({
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         marginLeft: "3%",
     },
     title: {
-        fontSize: 18,
+        fontSize: 25,
         fontWeight: 'bold',
         margin: 24,
         textAlign: 'center',

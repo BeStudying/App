@@ -11,7 +11,6 @@ export default function Header() {
 
 const styles = StyleSheet.create({
     header: {
-        marginBottom: '65%',
         position: 'relative',
     },
     title: {
