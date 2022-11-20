@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, StyleSheet, Text, TextInput } from 'react-native';
 import { Card } from 'react-native-paper';
 
-
 export default function Login() {
     return (
         <Card style={styles.container}>
