@@ -3,30 +3,14 @@ import { Button, StyleSheet, Text, ScrollView, View, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
 
-function Amis1() {
+function Amis({route}) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Emploi du Temps Amis 1</Text>
+      <Text>Emploi du Temps {route?.params?.title}</Text>
     </View>
   );
 }
 
-function Amis2() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Emploi du Temps Amis 2</Text>
-    </View>
-  );
-}
-
-function List() {
-  return (
-    <Drawer.Navigator useLegacyImplementation>
-      <Drawer.Screen name="Amis 1" component={Amis1} />
-      <Drawer.Screen name="Amis 2" component={Amis2} />
-    </Drawer.Navigator>
-  );
-}
 const friends = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -44,6 +28,16 @@ const friends = [
 
 export default function Friends() {
   return (
-      <List/>
+    <Drawer.Navigator useLegacyImplementation screenOptions={{
+        drawerActiveTintColor: '#1cd404',
+        drawerActiveBackgroundColor: '#ddffd9',
+        headerShown: false
+    }}>
+    {friends.map((friend) => {
+      return(
+        <Drawer.Screen name={friend.title} component={Amis} initialParams={friend} />
+      )
+    })}
+    </Drawer.Navigator>
   );  
 }
