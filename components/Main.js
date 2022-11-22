@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Login from './Login.js';
 import { createNavigationContainerRef } from '@react-navigation/native';

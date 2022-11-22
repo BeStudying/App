@@ -1,10 +1,32 @@
-import React from 'react';
-import { Button, StyleSheet, Text, ScrollView, View, Alert } from 'react-native';
-import { Card } from 'react-native-paper';
+import * as React from 'react';
+import { Button, StyleSheet, Text, ScrollView, View, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from './Home';
 const Drawer = createDrawerNavigator();
 
+function Amis1() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Emploi du Temps Amis 1</Text>
+    </View>
+  );
+}
+
+function Amis2() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Emploi du Temps Amis 2</Text>
+    </View>
+  );
+}
+
+function List() {
+  return (
+    <Drawer.Navigator useLegacyImplementation>
+      <Drawer.Screen name="Amis 1" component={Amis1} />
+      <Drawer.Screen name="Amis 2" component={Amis2} />
+    </Drawer.Navigator>
+  );
+}
 const friends = [
   {
     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -22,25 +44,6 @@ const friends = [
 
 export default function Friends() {
   return (
-    <ScrollView>
-      {friends.map((friend) => {
-        return(
-          <Card style={{margin: 15, padding: 25, borderRadius: '10px'}}>
-            <Text>{friend.title}</Text>
-          </Card>
-        )
-      })}
-    </ScrollView>
+      <List/>
   );  
 }
-
-/*
-<Drawer.Navigator initialRouteName="Home">
-    <Drawer.Screen name="Home" component={Home} />
-    <Drawer.Screen name="Amis 1" component={Home}/>
-    <Drawer.Screen name="Amis 2" component={Home}/>
-    <Drawer.Screen name="Amis 3" component={Home}/>
-    <Drawer.Screen name="Amis 4" component={Home}/>
-    <Drawer.Screen name="Amis 5" component={Home}/>
-  </Drawer.Navigator>
-*/
