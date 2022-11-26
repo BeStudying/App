@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, StyleSheet, Text, ScrollView, View, } from 'react-native';
+import { Text, View, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
 
@@ -20,26 +20,26 @@ const friends = [
   },
 ];
 
-export default function Friends() {
-  return (
-    <Drawer.Navigator useLegacyImplementation screenOptions={{
-        drawerActiveTintColor: '#1cd404',
-        drawerActiveBackgroundColor: '#ddffd9',
-        headerShown: false
-    }}>
-    {friends.map((friend) => {
-      return(
-        <Drawer.Screen name={friend.title} key={friend.title} component={Amis} initialParams={friend} />
-      )
-    })}
-    </Drawer.Navigator>
-  );  
-}
-
-function Amis({route}) {
+const Ami = function({route}){
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Emploi du Temps {route?.params?.title}</Text>
     </View>
   );
+}
+
+export default function Friends() {
+  return (
+    <Drawer.Navigator useLegacyImplementation screenOptions={{
+        drawerActiveTintColor: '#109e00',
+        drawerActiveBackgroundColor: '#ddffd9',
+        headerShown: false
+    }}>
+    {friends.map((friend) => {
+      return(
+        <Drawer.Screen name={friend.title} key={friend.title} component={Ami} initialParams={friend} />
+      )
+    })}
+    </Drawer.Navigator>
+  );  
 }

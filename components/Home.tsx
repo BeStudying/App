@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import Navigation from './Navigation.jsx';
+import Navigation from './Navigation';
 
-export default function Home({navigation}) {
+export default function Home() {
   return (
     <View style={styles.app}>
       <Navigation/>

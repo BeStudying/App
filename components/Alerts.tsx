@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default function Alerts() {
   return (

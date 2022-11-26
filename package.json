@@ -976,7 +976,6 @@
     "type-fest": "^0.12.0",
     "type-is": "^1.6.18",
     "typedarray": "^0.0.6",
-    "typescript": "^4.9.3",
     "ua-parser-js": "^0.7.32",
     "uglify-es": "^3.3.9",
     "unbox-primitive": "^1.0.2",
@@ -1082,5 +1081,13 @@
   "bugs": {
     "url": "https://github.com/BeStudying/App/issues"
   },
-  "homepage": "https://github.com/BeStudying/App#readme"
+  "homepage": "https://github.com/BeStudying/App#readme",
+  "devDependencies": {
+    "@tsconfig/react-native": "^2.0.2",
+    "@types/jest": "^29.2.3",
+    "@types/react": "^18.0.25",
+    "@types/react-native": "^0.70.7",
+    "@types/react-test-renderer": "^18.0.0",
+    "typescript": "^4.9.3"
+  }
 }

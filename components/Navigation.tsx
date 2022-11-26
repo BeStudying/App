@@ -2,9 +2,9 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Alerts from './Alerts.jsx';
-import Friends from './Friends.jsx';
-import Options from './Options.jsx';
+import Alerts from './Alerts';
+import Friends from './Friends';
+import Options from './Options';
 import { View } from 'react-native';
 
 export const Tab = createBottomTabNavigator();
