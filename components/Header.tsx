@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         paddingBottom: '3%',
         fontWeight: 'bold',
-        fontSize: '30%'
+        fontSize: 30,
     }
 })
 

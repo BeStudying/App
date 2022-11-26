@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         marginBottom: '75%',
-        borderRadius: '15px',
+        borderRadius: 15,
         width: "94%",
         marginLeft: "3%",
     },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
       height: 40,
       margin: 12,
       padding: 10,
-      borderRadius: '8px',
+      borderRadius: 8,
       borderColor: 'green',
       borderWidth: 0.5,
       color: 'green',
