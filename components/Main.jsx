@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Login from './Login.js';
+import Login from './Login.jsx';
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 const navigation = createNavigationContainerRef()

@@ -3,13 +3,7 @@ import { Button, StyleSheet, Text, ScrollView, View, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
 
-function Amis({route}) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Emploi du Temps {route?.params?.title}</Text>
-    </View>
-  );
-}
+
 
 const friends = [
   {
@@ -35,9 +29,17 @@ export default function Friends() {
     }}>
     {friends.map((friend) => {
       return(
-        <Drawer.Screen name={friend.title} component={Amis} initialParams={friend} />
+        <Drawer.Screen name={friend.title} key={friend.title} component={Amis} initialParams={friend} />
       )
     })}
     </Drawer.Navigator>
   );  
+}
+
+function Amis({route}) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Emploi du Temps {route?.params?.title}</Text>
+    </View>
+  );
 }
