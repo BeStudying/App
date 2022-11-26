@@ -32,3 +32,8 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export function test(...args){
+  console.log(...args)
+  return true
+}
