@@ -53,7 +53,9 @@ export default function Login(props: any) {
                     <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text> grâce à l'<Text style={{fontWeight: 'bold', color: '#00a2ff'}}>ENT</Text>
                 </Text>
                 <TextInput
-                    style={[styles.input, (isFocusUsername && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
+                    style={[styles.input,
+                        !username && { borderColor: 'black' },
+                        (isFocusUsername && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
                     onFocus={() => setIsFocusUsername(true)}
                     onBlur={() => setIsFocusUsername(false)}
                     placeholder="Nom d'Utilisateur"
@@ -62,7 +64,9 @@ export default function Login(props: any) {
                     onChangeText={(newValue) => setUsername(newValue)}
                 />
                 <TextInput
-                    style={[styles.input, (isFocusPassword && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
+                    style={[styles.input,
+                        !password && { borderColor: 'black' },
+                        (isFocusPassword && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
                     onFocus={() => setIsFocusPassword(true)}
                     onBlur={() => setIsFocusPassword(false)}
                     placeholder="Mot de Passe"
@@ -76,7 +80,9 @@ export default function Login(props: any) {
                 {renderENT()}
                 <Dropdown
                     statusBarIsTranslucent={true}
-                    style={[styles.dropdown, isFocusENT && { borderColor: 'blue' }]}
+                    style={[styles.dropdown, 
+                        !ent && { borderColor: 'black' },
+                        isFocusENT && { borderColor: 'blue' }]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
@@ -100,7 +106,9 @@ export default function Login(props: any) {
                 {renderSchool()}
                 <Dropdown
                     statusBarIsTranslucent={true}
-                    style={[styles.dropdown, isFocusSchool && { borderColor: 'blue' }]}
+                    style={[styles.dropdown, 
+                        !school && { borderColor: 'black' },
+                        isFocusSchool && { borderColor: 'blue' }]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
