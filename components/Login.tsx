@@ -1,19 +1,44 @@
 import React, {useState} from 'react';
 import { Button, Text, TextInput, StyleSheet, SafeAreaView, View} from 'react-native';
 import { Card } from 'react-native-paper';
-import getSchools from '../api/EducationAPI';
+import getSchools from '../api/EducationAPI.mjs';
+import getCAS from '../api/PronoteAPI.mjs';
 import { Dropdown } from 'react-native-element-dropdown';
 
-export default function Login(props) {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+let lastUpdated = Date.now();
+
+export default function Login(props: any) {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [ent, setENT] = useState(null);
-    const [isFocus, setIsFocusENT] = useState(false);
+    const [isFocusENT, setIsFocusENT] = useState(false);
+    const [entData, setENTData] = useState([]);
+
+    const [school, setSchool] = useState(null);
+    const [isFocusSchool, setIsFocusSchool] = useState(false);
+    const [schoolsData, setSchoolsData] = useState([]);
+    const [schoolQuery, setSchoolQuery] = useState('');
   
-    const renderENT = () => (ent || isFocus) 
-        ? (<Text style={[styles.label, isFocus && { color: 'green' }]}>ENT</Text>) 
-        : null
-    const schools = async () => await getSchools('Lycée Jean Pierre Timbaud')
+    const renderENT = () => (ent || isFocusENT) 
+        ? (<Text style={[styles.label, isFocusENT && { color: 'green' }]}>ENT</Text>) 
+        : null;  
+    const renderSchool = () => (school || isFocusSchool) 
+        ? (<Text style={[styles.label, isFocusSchool && { color: 'green' }]}>École</Text>) 
+        : null;
+
+    (async () => {
+        const data: any = await getCAS();
+        setENTData(data);
+    })();
+
+    (async (query: string) => {
+        // if(Date.now() - lastUpdated < 1) return; // Prevent refresh too fast (laggy)
+        const data: any = await getSchools(query);
+        setSchoolsData(data);
+        lastUpdated = Date.now()
+    })(schoolQuery);
+    
     return (
         <SafeAreaView>
             <Card style={styles.container}>
@@ -37,24 +62,20 @@ export default function Login(props) {
                     onChangeText={(newValue) => setPassword(newValue)}
                     cursorColor={'green'}
                 />
-                <View style={{
-                    backgroundColor: 'white',
-                    padding: 10,
-                }}>
+                <View style={{padding: 10}}>
                 {renderENT()}
                 <Dropdown
                     statusBarIsTranslucent={true}
-                    style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                    style={[styles.dropdown, isFocusENT && { borderColor: 'blue' }]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[{label: 'ent.iledefrance.fr', value:'ent.iledefrance.fr'}]}
-                    search
+                    data={[...entData]}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocus ? 'Sélectionner votre ENT' : '...'}
+                    placeholder={!isFocusENT ? 'Sélectionner votre ENT' : '...'}
                     searchPlaceholder="Rechercher"
                     value={ent}
                     onFocus={() => setIsFocusENT(true)}
@@ -65,13 +86,42 @@ export default function Login(props) {
                     }}
                 />
                 </View>
+                <View style={{padding: 10}}>
+                {renderSchool()}
+                <Dropdown
+                    statusBarIsTranslucent={true}
+                    style={[styles.dropdown, isFocusSchool && { borderColor: 'blue' }]}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={[...schoolsData]}
+                    search
+                    searchQuery={(keyword, labelValue) => {
+                        setSchoolQuery(keyword)
+                        return true;
+                    }}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocusENT ? 'Rechercher votre établissement publique' : '...'}
+                    searchPlaceholder="Rechercher"
+                    value={school}
+                    onFocus={() => setIsFocusSchool(true)}
+                    onBlur={() => setIsFocusSchool(false)}
+                    onChange={(item) => {
+                        setSchool(item.value);
+                        setIsFocusSchool(false);
+                    }}
+                />
+                </View>
                 <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password, ent)}/>
             </Card>
         </SafeAreaView>
     );
 }
 
-function tryLogin(navigation, username, password, ent){
+function tryLogin(navigation: any, username: string, password: string, ent: string|null){
     navigation.navigate('Home')
     navigation.reset({
         index: 0,
