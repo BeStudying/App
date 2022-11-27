@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Timetable from './Timetable';
 const Drawer = createDrawerNavigator();
 
 const friends = [
@@ -18,10 +19,56 @@ const friends = [
   },
 ];
 
-const Ami = function({route}: any){
+const Ami = function({route}: {route: any }){
+  const timedata = [{
+    id: '29a22ab6024ee07c',
+    from: 1669564676,
+    to: 1669564676,
+    isDetention: false,
+    remoteLesson: false,
+    status: undefined,
+    hasDuplicate: false,
+    isAway: false,
+    isCancelled: false,
+    color: '#C93E69',
+    subject: 'PHILOSOPHIE',
+    teacher: 'JOHN DOE',
+    room: 'D408',
+  },
+  {
+    id: 'd1297e2340e6466b',
+    from: 1669564676,
+    to: 1669564676,
+    isDetention: false,
+    remoteLesson: false,
+    status: 'Prof. absent',
+    hasDuplicate: false,
+    isAway: true,
+    isCancelled: false,
+    color: '#11EE5F',
+    subject: 'HISTOIRE-GEOGRAPHIE',
+    teacher: 'BIG JOHN',
+    room: 'D305'
+  },
+  {
+    id: '9ef643a51f4b34ba',
+    from: 1669564676,
+    to: 1669564676,
+    isDetention: false,
+    remoteLesson: false,
+    status: 'Prof. absent',
+    hasDuplicate: false,
+    isAway: true,
+    isCancelled: false,
+    color: '#3454A0',
+    subject: 'ESPAGNOL LV2',
+    teacher: 'JOHN WICK',
+    room: 'B003'
+  }]
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Emploi du Temps {route?.params?.title}</Text>
+    <View style={{ flex: 1}}>
+    <Text style={{ fontSize: 25, textAlign: 'center', color:'#109e00'}}>Emploi du temps de {route?.params?.title}</Text>
+      <Timetable timetable={timedata}/>
     </View>
   );
 }

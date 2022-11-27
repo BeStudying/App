@@ -17,7 +17,7 @@ function Show(props: any){
   );
 }
 
-export default function Main({ navigation }) {
+export default function Main({ navigation }: {navigation: object}) {
   return (
       <Show login={true} navigation={navigation}/>
   );
