@@ -5,12 +5,16 @@ import getSchools from '../api/EducationAPI.mjs';
 import getCAS from '../api/PronoteAPI.mjs';
 import { Dropdown } from 'react-native-element-dropdown';
 
-let lastUpdated = Date.now();
+let lastQuery: string|null = null;
 
 export default function Login(props: any) {
 
     const [username, setUsername] = useState('');
+    const [isFocusUsername, setIsFocusUsername] = useState(false);
+
     const [password, setPassword] = useState('');
+    const [isFocusPassword, setIsFocusPassword] = useState(false);
+
     const [ent, setENT] = useState(null);
     const [isFocusENT, setIsFocusENT] = useState(false);
     const [entData, setENTData] = useState([]);
@@ -35,10 +39,10 @@ export default function Login(props: any) {
     }
     
     (async (query: string) => {
-        if(Date.now() - lastUpdated > 2500) return; // [2.5s] Prevents refresh too fast (laggy + rate limited)
+        if(query === lastQuery) return; // Prevents refresh too fast (laggy + rate limited)
         const data: any = await getSchools(query);
         setSchoolsData(data);
-        lastUpdated = Date.now() 
+        lastQuery = query
     })(schoolQuery);
     
     return (
@@ -49,14 +53,18 @@ export default function Login(props: any) {
                     <Text style={{fontWeight: 'bold', color: 'green'}}> PRONOTE</Text> grâce à l'<Text style={{fontWeight: 'bold', color: '#00a2ff'}}>ENT</Text>
                 </Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, (isFocusUsername && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
+                    onFocus={() => setIsFocusUsername(true)}
+                    onBlur={() => setIsFocusUsername(false)}
                     placeholder="Nom d'Utilisateur"
                     placeholderTextColor="black" 
                     value={username}
                     onChangeText={(newValue) => setUsername(newValue)}
                 />
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, (isFocusPassword && !(isFocusENT || isFocusSchool)) && { borderColor: 'blue' }]}
+                    onFocus={() => setIsFocusPassword(true)}
+                    onBlur={() => setIsFocusPassword(false)}
                     placeholder="Mot de Passe"
                     placeholderTextColor="black" 
                     secureTextEntry={true}
@@ -73,7 +81,7 @@ export default function Login(props: any) {
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[...entData]}
+                    data={entData}
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
@@ -97,7 +105,7 @@ export default function Login(props: any) {
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
-                    data={[...schoolsData]}
+                    data={schoolsData}
                     search
                     searchQuery={(keyword, labelValue) => {
                         setSchoolQuery(keyword)
