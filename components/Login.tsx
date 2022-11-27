@@ -27,16 +27,18 @@ export default function Login(props: any) {
         ? (<Text style={[styles.label, isFocusSchool && { color: 'green' }]}>École</Text>) 
         : null;
 
-    (async () => {
-        const data: any = await getCAS();
-        setENTData(data);
-    })();
-
+    if(!entData){
+        (async () => {
+            const data: any = await getCAS();
+            setENTData(data);
+        })();
+    }
+    
     (async (query: string) => {
-        // if(Date.now() - lastUpdated < 1) return; // Prevent refresh too fast (laggy)
+        if(Date.now() - lastUpdated > 2500) return; // [2.5s] Prevents refresh too fast (laggy + rate limited)
         const data: any = await getSchools(query);
         setSchoolsData(data);
-        lastUpdated = Date.now()
+        lastUpdated = Date.now() 
     })(schoolQuery);
     
     return (
@@ -104,7 +106,7 @@ export default function Login(props: any) {
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocusENT ? 'Rechercher votre établissement publique' : '...'}
+                    placeholder={!isFocusSchool ? 'Rechercher votre établissement publique' : '...'}
                     searchPlaceholder="Rechercher"
                     value={school}
                     onFocus={() => setIsFocusSchool(true)}
