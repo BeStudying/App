@@ -18,7 +18,7 @@ export type Lesson = {
     room: string;
 }
 
-export default function Timetable(props: {timetable: Lesson[]}) {
+export default function Timetable(props: {timetable: Lesson[], friendId: number, studentId: number}) {
     return (
         <ScrollView>
         {props.timetable.map((element) => {
@@ -32,13 +32,13 @@ export default function Timetable(props: {timetable: Lesson[]}) {
                 return `${date.getHours()}:${date.getMinutes()}`;
             }
             return (
-                <View>
-                <Text style={[styles.hour, {borderColor: element.color}]}>{renderHour()}</Text>
-                <Card style={[styles.card, {borderColor: element.color}]} key={element.id}>
-                    <Text style={styles.subject}>{element.subject}</Text>
-                    <Text>{element.teacher}</Text>
-                    {renderStatus()}
-                </Card>
+                <View key={element.id}>
+                    <Text style={[styles.hour, {borderColor: element.color}]}>{renderHour()}</Text>
+                    <Card style={[styles.card, {borderColor: element.color}]}>
+                        <Text style={styles.subject}>{element.subject}</Text>
+                        <Text>{element.teacher}</Text>
+                        {renderStatus()}
+                    </Card>
                 </View>
             );
         })}

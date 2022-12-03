@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
-import { Button, Text, TextInput, StyleSheet, SafeAreaView, View} from 'react-native';
-import { Card } from 'react-native-paper';
+import { Button, Text, TextInput, StyleSheet, SafeAreaView, View, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Card, TextInputProps } from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
-import getCAS from '../api/PronoteAPI.mjs';
+import { getCAS, login } from '../api/PronoteAPI.mjs';
 import { Dropdown } from 'react-native-element-dropdown';
 
 let lastQuery: string|null = null;
 
 export default function Login(props: any) {
+    const [defaultEntries, setDefaultEntries] = useState(false);
 
     const [username, setUsername] = useState('');
     const [isFocusUsername, setIsFocusUsername] = useState(false);
@@ -27,14 +29,14 @@ export default function Login(props: any) {
     const renderENT = () => (ent || isFocusENT) 
         ? (<Text style={[styles.label, isFocusENT && { color: 'green' }]}>ENT</Text>) 
         : null;  
+        
     const renderSchool = () => (school || isFocusSchool) 
         ? (<Text style={[styles.label, isFocusSchool && { color: 'green' }]}>École</Text>) 
         : null;
 
-    if(!entData){
+    if(!entData.length){
         (async () => {
-            const data: any = await getCAS();
-            setENTData(data);
+            setENTData(await getCAS());
         })();
     }
     
@@ -45,6 +47,21 @@ export default function Login(props: any) {
         lastQuery = query
     })(schoolQuery);
     
+    if(!defaultEntries){
+        (async () => {
+            const username: any = await AsyncStorage.getItem('username') ?? '';
+            const password: any = await AsyncStorage.getItem('password') ?? '';
+            const ent: any = await AsyncStorage.getItem('ent') ?? null;
+            const school: any = await AsyncStorage.getItem('school') ?? null;
+
+            setUsername(username);
+            setPassword(password);
+            setENT(ent);
+            setSchool(school);
+            setDefaultEntries(true);
+        })();
+    };
+
     return (
         <SafeAreaView>
             <Card style={styles.container}>
@@ -59,7 +76,7 @@ export default function Login(props: any) {
                     onFocus={() => setIsFocusUsername(true)}
                     onBlur={() => setIsFocusUsername(false)}
                     placeholder="Nom d'Utilisateur"
-                    placeholderTextColor="black" 
+                    placeholderTextColor="black"
                     value={username}
                     onChangeText={(newValue) => setUsername(newValue)}
                 />
@@ -122,7 +139,7 @@ export default function Login(props: any) {
                     maxHeight={300}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocusSchool ? 'Rechercher votre établissement publique' : '...'}
+                    placeholder={school ? school : (!isFocusSchool ? 'Rechercher votre établissement publique' : '...')}
                     searchPlaceholder="Rechercher"
                     value={school}
                     onFocus={() => setIsFocusSchool(true)}
@@ -133,18 +150,46 @@ export default function Login(props: any) {
                     }}
                 />
                 </View>
-                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password, ent)}/>
+                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password, ent, school)}/>
             </Card>
         </SafeAreaView>
     );
 }
 
-function tryLogin(navigation: any, username: string, password: string, ent: string|null){
-    navigation.navigate('Home')
-    navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-    });
+async function tryLogin(navigation: any, username: string, password: string, ent: string|null, school: string|null){
+    if(!username){
+        Alert.alert("Veuillez entrer un nom d'utilisateur !");
+        return;
+    }
+    else if(!password){
+        Alert.alert("Veuillez entrer un mot de passe !");
+        return;
+    }
+    else if (!ent){
+        Alert.alert("Veuillez sélectionner un ENT !");
+        return;
+    }
+    else if (!school){
+        Alert.alert("Veuillez sélectionner un établissement !");
+        return;
+    }
+    const id = await login(username, password, ent, school);
+    if(id){
+        navigation.navigate('Home', {
+            id: id
+        })
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+        });
+        AsyncStorage.setItem('username', username);
+        AsyncStorage.setItem('password', password);
+        AsyncStorage.setItem('ent', ent);
+        AsyncStorage.setItem('school', school);
+    } else {
+        Alert.alert("Compte invalide.");
+        return;
+    }
 }
 
 const styles = StyleSheet.create({

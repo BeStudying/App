@@ -67,13 +67,14 @@ const Ami = function({route}: {route: any }){
   }]
   return (
     <View style={{ flex: 1}}>
-    <Text style={{ fontSize: 25, textAlign: 'center', color:'#109e00'}}>Emploi du temps de {route?.params?.title}</Text>
-      <Timetable timetable={timedata}/>
+    <Text style={{ fontSize: 25, textAlign: 'center', color:'#109e00'}}>Emploi du temps de {route.params?.friend?.title}</Text>
+      <Timetable timetable={timedata} friendId={route.params?.friend?.id} studentId={route.params?.studentId}/>
     </View>
   );
 }
 
-export default function Friends() {
+export default function Friends({route}: any) {
+  const id = route.params?.id;
   return (
     <Drawer.Navigator useLegacyImplementation screenOptions={{
         drawerActiveTintColor: '#109e00',
@@ -82,7 +83,7 @@ export default function Friends() {
     }}>
     {friends.map((friend) => {
       return(
-        <Drawer.Screen name={friend.title} key={friend.title} component={Ami} initialParams={friend} />
+        <Drawer.Screen name={friend.title} key={friend.title} component={Ami} initialParams={{friend: friend, studentId: id}} />
       )
     })}
     </Drawer.Navigator>
