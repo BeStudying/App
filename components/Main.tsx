@@ -2,18 +2,15 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Login from './Login';
 import Home from './Home';
-import { createNavigationContainerRef } from '@react-navigation/native';
 
-const navigation = createNavigationContainerRef()
-
-function Show(props: any){
+function Show(props: {login: boolean; navigation: object}){
   return props.login ? (
     <View style={styles.app}>
       <View style={{paddingBottom: '50%'}}/>
       <Login navigation={props.navigation}/>
     </View>
   ) : (
-    <Home/>
+    <Home route={undefined} navigation={props.navigation}/>
   );
 }
 

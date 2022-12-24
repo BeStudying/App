@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Text, TextInput, StyleSheet, SafeAreaView, View, Alert } from 'react-native';
+import { Button, Text, TextInput, StyleSheet, SafeAreaView, View, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card, TextInputProps } from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
@@ -9,23 +9,25 @@ import { Dropdown } from 'react-native-element-dropdown';
 let lastQuery: string|null = null;
 
 export default function Login(props: any) {
-    const [defaultEntries, setDefaultEntries] = useState(false);
+    const [defaultEntries, setDefaultEntries] = useState<boolean>(false);
 
-    const [username, setUsername] = useState('');
-    const [isFocusUsername, setIsFocusUsername] = useState(false);
+    const [username, setUsername] = useState<string>('');
+    const [isFocusUsername, setIsFocusUsername] = useState<boolean>(false);
 
-    const [password, setPassword] = useState('');
-    const [isFocusPassword, setIsFocusPassword] = useState(false);
+    const [password, setPassword] = useState<string>('');
+    const [isFocusPassword, setIsFocusPassword] = useState<boolean>(false);
 
-    const [ent, setENT] = useState(null);
-    const [isFocusENT, setIsFocusENT] = useState(false);
-    const [entData, setENTData] = useState([]);
+    const [ent, setENT] = useState<string|null>(null);
+    const [isFocusENT, setIsFocusENT] = useState<boolean>(false);
+    const [entData, setENTData] = useState<{label: string, value: string}[]>([]);
 
-    const [school, setSchool] = useState(null);
-    const [isFocusSchool, setIsFocusSchool] = useState(false);
-    const [schoolsData, setSchoolsData] = useState([]);
-    const [schoolQuery, setSchoolQuery] = useState('');
+    const [school, setSchool] = useState<string|null>(null);
+    const [isFocusSchool, setIsFocusSchool] = useState<boolean>(false);
+    const [schoolsData, setSchoolsData] = useState<{label: string, value: string}[]>([]);
+    const [schoolQuery, setSchoolQuery] = useState<string>('');
   
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const renderENT = () => (ent || isFocusENT) 
         ? (<Text style={[styles.label, isFocusENT && { color: 'green' }]}>ENT</Text>) 
         : null;  
@@ -34,11 +36,18 @@ export default function Login(props: any) {
         ? (<Text style={[styles.label, isFocusSchool && { color: 'green' }]}>École</Text>) 
         : null;
 
-    if(!entData.length){
-        (async () => {
-            setENTData(await getCAS());
-        })();
-    }
+    const renderConnect = () =>
+        isLoading
+        ? <ActivityIndicator size="large" color="green" />
+        : <Button title='Se Connecter' color='green' onPress={() => {
+            tryLogin(props.navigation, setIsLoading, username, password, ent, school)
+            setIsLoading(true)
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 3500);
+        }}/>
+
+    if(!entData.length) (async () => setENTData(await getCAS()))();
     
     (async (query: string) => {
         if(query === lastQuery) return; // Prevents refresh too fast (laggy + rate limited)
@@ -46,13 +55,14 @@ export default function Login(props: any) {
         setSchoolsData(data);
         lastQuery = query
     })(schoolQuery);
+
     
     if(!defaultEntries){
         (async () => {
-            const username: any = await AsyncStorage.getItem('username') ?? '';
-            const password: any = await AsyncStorage.getItem('password') ?? '';
-            const ent: any = await AsyncStorage.getItem('ent') ?? null;
-            const school: any = await AsyncStorage.getItem('school') ?? null;
+            const username: string = await AsyncStorage.getItem('username') ?? '';
+            const password: string = await AsyncStorage.getItem('password') ?? '';
+            const ent: string|null = await AsyncStorage.getItem('ent') ?? null;
+            const school: string|null = await AsyncStorage.getItem('school') ?? null;
 
             setUsername(username);
             setPassword(password);
@@ -150,26 +160,30 @@ export default function Login(props: any) {
                     }}
                 />
                 </View>
-                <Button title='Se Connecter' color='green' onPress={() => tryLogin(props.navigation, username, password, ent, school)}/>
+                {renderConnect()}
             </Card>
         </SafeAreaView>
     );
 }
 
-async function tryLogin(navigation: any, username: string, password: string, ent: string|null, school: string|null){
+async function tryLogin(navigation: any, loadingCallback: (value: boolean) => void, username: string, password: string, ent: string|null, school: string|null){
     if(!username){
+        loadingCallback(false);
         Alert.alert("Veuillez entrer un nom d'utilisateur !");
         return;
     }
     else if(!password){
+        loadingCallback(false);
         Alert.alert("Veuillez entrer un mot de passe !");
         return;
     }
     else if (!ent){
+        loadingCallback(false);
         Alert.alert("Veuillez sélectionner un ENT !");
         return;
     }
     else if (!school){
+        loadingCallback(false);
         Alert.alert("Veuillez sélectionner un établissement !");
         return;
     }
@@ -188,8 +202,8 @@ async function tryLogin(navigation: any, username: string, password: string, ent
         AsyncStorage.setItem('school', school);
     } else {
         Alert.alert("Compte invalide.");
-        return;
     }
+    loadingCallback(false);
 }
 
 const styles = StyleSheet.create({

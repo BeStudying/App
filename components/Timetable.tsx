@@ -20,26 +20,33 @@ export type Lesson = {
 
 export default function Timetable(props: {timetable: Lesson[], friendId: number, studentId: number}) {
     return (
-        <ScrollView>
+        <ScrollView style={{backgroundColor:'white'}}>
         {props.timetable.map((element) => {
             const renderStatus = () => {
                 if(!element.status) return;
-                return (<Text style={[styles.status]}>{element.status}</Text>);
+                return (<Text style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>);
                 
             }
             const renderHour = () => {
                 const date = new Date(element.from);
-                return `${date.getHours()}:${date.getMinutes()}`;
+                return `${date.getHours()}h${date.getMinutes()}`;
             }
             return (
-                <View key={element.id}>
-                    <Text style={[styles.hour, {borderColor: element.color}]}>{renderHour()}</Text>
-                    <Card style={[styles.card, {borderColor: element.color}]}>
-                        <Text style={styles.subject}>{element.subject}</Text>
+            <Card key={element.id} style={[(element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
+                <View style={styles.cours}>
+                    <View style={styles.heures}>
+                        <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
+                        <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
+                    </View>
+                    <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
+                    <View style={styles.infos}>
+                        <Text style={styles.matiere}>{element.subject}</Text>
                         <Text>{element.teacher}</Text>
-                        {renderStatus()}
-                    </Card>
+                        <Text>{element.room}</Text>
+                    </View>
+                    {renderStatus()}
                 </View>
+            </Card>
             );
         })}
         </ScrollView>
@@ -47,15 +54,6 @@ export default function Timetable(props: {timetable: Lesson[], friendId: number,
 }
 
 const styles = StyleSheet.create({
-    card: {
-        padding: 20,
-        margin: 15,      
-        borderWidth: 2,
-    },
-    subject : {
-        fontWeight: 'bold',
-        fontSize: 17,
-    },
     hour: {
         position: 'absolute',
         backgroundColor: 'white',
@@ -69,14 +67,37 @@ const styles = StyleSheet.create({
     },
     status: {
         position: 'absolute',
-        backgroundColor: 'red',
-        borderColor: 'black',  
+        backgroundColor: '#eb4b43',
         color: 'white',
-        borderWidth: 1,
-        left: 200,
-        top: 25,
+        left: 225,
+        top: 50,
         zIndex: 999,
+        padding: 2,
         paddingHorizontal: 8,
-        fontSize: 17,
+        fontSize: 14,
     },
+    heures: {
+        width: 45,
+    },
+    cours: {
+        height: 61,
+        flexDirection: "row",
+        marginVertical: 20,
+        marginLeft: 32,
+        marginRight: 71
+    },
+    couleurMatiere: {
+        width: 6,
+        height: 75,
+        borderRadius: 100,
+        marginLeft: 4
+    },
+    matiere: {
+        fontWeight: 'bold'
+    },
+    infos: {
+        width: 300,
+        marginLeft: 8,
+    },
+
 })
