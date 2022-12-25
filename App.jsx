@@ -1,39 +1,58 @@
 import * as React from 'react';
 import Main from './components/Main';
 import Home from './components/Home';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CGU from './components/CGU';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-          title: 'BeStudying.', 
-          headerStyle: {
-            backgroundColor: 'green',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },  
-          headerBackVisible: false,
-        }}>
-        <Stack.Screen
-          name="Main"
-          component={Main}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{
+                title: 'BeStudying.',
+                headerStyle: {
+                    backgroundColor: 'green',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+                headerBackVisible: false,
+            }}>
+                <Stack.Group>
+                    <Stack.Screen
+                        name="Main"
+                        component={Main}
+                    />
+                    <Stack.Screen
+                        name="Home"
+                        component={Home}
+                    />
+                </Stack.Group>
+                <Stack.Group screenOptions={{
+                    presentation: 'modal',
+                    headerStyle: {
+                        backgroundColor: 'white',
+                    },
+                    headerTintColor: 'black',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    }
+                }}>
+                    <Stack.Screen
+                        name="CGU"
+                        component={CGU}
+                        options={{headerTitle: "Conditions Générales d'Utilisation"}}
+                    />
+                </Stack.Group>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
-export function test(...args){
-  console.log(...args)
-  return true
+export function test(...args) {
+    console.log(...args);
+    return true;
 }

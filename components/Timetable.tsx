@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Text, View, ScrollView, StyleSheet} from 'react-native';
-import { Card } from 'react-native-paper';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Card} from 'react-native-paper';
 
 export type Lesson = {
     id: string;
@@ -8,7 +8,7 @@ export type Lesson = {
     to: number;
     isDetention: boolean;
     remoteLesson: boolean;
-    status: string|undefined;
+    status: string | undefined;
     hasDuplicate: boolean;
     isAway: boolean;
     isCancelled: boolean;
@@ -18,37 +18,39 @@ export type Lesson = {
     room: string;
 }
 
-export default function Timetable(props: {timetable: Lesson[], friendId: number, studentId: number}) {
+export default function Timetable(props: { timetable: Lesson[], friendId: number, studentId: number }) {
     return (
-        <ScrollView style={{backgroundColor:'white'}}>
-        {props.timetable.map((element) => {
-            const renderStatus = () => {
-                if(!element.status) return;
-                return (<Text style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>);
-                
-            }
-            const renderHour = () => {
-                const date = new Date(element.from);
-                return `${date.getHours()}h${date.getMinutes()}`;
-            }
-            return (
-            <Card key={element.id} style={[(element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
-                <View style={styles.cours}>
-                    <View style={styles.heures}>
-                        <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
-                        <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
-                    </View>
-                    <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
-                    <View style={styles.infos}>
-                        <Text style={styles.matiere}>{element.subject}</Text>
-                        <Text>{element.teacher}</Text>
-                        <Text>{element.room}</Text>
-                    </View>
-                    {renderStatus()}
-                </View>
-            </Card>
-            );
-        })}
+        <ScrollView style={{backgroundColor: 'white'}}>
+            {props.timetable.map((element) => {
+                const renderStatus = () => {
+                    if (!element.status) return;
+                    return (<Text
+                        style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>);
+
+                }
+                const renderHour = () => {
+                    const date = new Date(element.from);
+                    return `${date.getHours()}h${date.getMinutes()}`;
+                }
+                return (
+                    <Card key={element.id}
+                          style={[{backgroundColor: 'white'}, (element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
+                        <View style={styles.cours}>
+                            <View style={styles.heures}>
+                                <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
+                                <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
+                            </View>
+                            <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
+                            <View style={styles.infos}>
+                                <Text style={styles.matiere}>{element.subject}</Text>
+                                <Text>{element.teacher}</Text>
+                                <Text>{element.room}</Text>
+                            </View>
+                            {renderStatus()}
+                        </View>
+                    </Card>
+                );
+            })}
         </ScrollView>
     );
 }
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     hour: {
         position: 'absolute',
         backgroundColor: 'white',
-        borderColor: 'black',    
+        borderColor: 'black',
         borderWidth: 1,
         left: 25,
         top: 15,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         backgroundColor: '#eb4b43',
         color: 'white',
-        left: 225,
+        right: -60,
         top: 50,
         zIndex: 999,
         padding: 2,

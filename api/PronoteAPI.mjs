@@ -12,5 +12,13 @@ export async function getCAS() {
  */
 export async function login(username, password, ent, school) {
     const response = await fetch(`https://bestudying.fr/pronote/login?username=${username}&password=${password}&rne=${school}&cas=${ent}`);
-    return response.status === 200 ? parseInt(await response.json()) : 0;
+    switch(response.status){
+        case 200:
+            return parseInt(await response.json());
+        case 504:
+        case 520:
+            return -1;
+        default:
+            return 0;
+    }
 }

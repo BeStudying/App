@@ -1,30 +1,28 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Login from './Login';
-import Home from './Home';
+import {DrawerScreenProps} from "@react-navigation/drawer";
 
-function Show(props: {login: boolean; navigation: object}){
-  return props.login ? (
-    <View style={styles.app}>
-      <View style={{paddingBottom: '50%'}}/>
-      <Login navigation={props.navigation}/>
-    </View>
-  ) : (
-    <Home route={undefined} navigation={props.navigation}/>
-  );
+function Show(props: { login: boolean; navigation: object }) {
+    return (
+        <View style={styles.app}>
+            <View style={{paddingBottom: '50%'}}/>
+            <Login navigation={props.navigation}/>
+        </View>
+    );
 }
 
-export default function Main({ navigation }: {navigation: object}) {
-  return (
-      <Show login={true} navigation={navigation}/>
-  );
+export default function Main({navigation}: DrawerScreenProps<any, "Main">) {
+    return (
+        <Show login={true} navigation={navigation}/>
+    );
 }
 
 
 const styles = StyleSheet.create({
-  app: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
+    app: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: '#ecf0f1',
+    },
 });
