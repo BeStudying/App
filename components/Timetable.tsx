@@ -18,10 +18,10 @@ export type Lesson = {
     room: string;
 }
 
-export default function Timetable(props: { timetable: Lesson[], friendId: number, studentId: number }) {
+export default function Timetable(props: { timetable: Lesson[], friendName: string }) {
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
-            {props.timetable.map((element) => {
+            {props.timetable.length > 0 ? props.timetable.map((element) => {
                 const renderStatus = () => {
                     if (!element.status) return;
                     return (<Text
@@ -50,7 +50,10 @@ export default function Timetable(props: { timetable: Lesson[], friendId: number
                         </View>
                     </Card>
                 );
-            })}
+            }) : <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
+                <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{props.friendName}</Text> n'a
+                    pas de cours pour aujourd'hui.</Text>
+            </Card>}
         </ScrollView>
     );
 }

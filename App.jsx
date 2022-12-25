@@ -4,10 +4,12 @@ import Home from './components/Home';
 import CGU from './components/CGU';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {LogBox} from "react-native";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+    LogBox.ignoreLogs(['Constants.platform.ios.model has been deprecated']); // TODO: À retirer si tu sais d'où sa vient
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{

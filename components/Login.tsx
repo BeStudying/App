@@ -194,10 +194,10 @@ async function tryLogin(navigation: any, loadingCallback: (value: boolean) => vo
             index: 0,
             routes: [{name: 'Home'}],
         });
-        AsyncStorage.setItem('username', username);
-        AsyncStorage.setItem('password', password);
-        AsyncStorage.setItem('ent', ent);
-        AsyncStorage.setItem('school', school);
+        await AsyncStorage.setItem('username', username);
+        await AsyncStorage.setItem('password', password);
+        await AsyncStorage.setItem('ent', ent);
+        await AsyncStorage.setItem('school', school);
     } else if (!id) {
         Alert.alert("Identifiant et/ou mot de passe invalide(s).");
     } else {

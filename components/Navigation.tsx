@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Alert} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import PronoBac from './PronoBac';
 import Friends from './Friends';
 import Self from './Self';
 import {DrawerActions} from '@react-navigation/native';
 import {DrawerScreenProps} from "@react-navigation/drawer";
+import {query} from "../api/PronoteAPI.mjs";
 
 const Tab = createBottomTabNavigator();
 
@@ -26,24 +26,25 @@ export default function Navigation({route, navigation}: DrawerScreenProps<any, s
                                 color='#f6f6f6' size={20}/>
         ),
     });
+    const [friends, setFriends] = useState<string[]>([]);
+    if(friends.length === 0){
+        query("friends", id ?? 0, "").then(data => {
+            setFriends(data)
+        });
+    }
     return (
-        <Tab.Navigator initialRouteName="Accueil" screenOptions={{
+        <Tab.Navigator initialRouteName="Amis" screenOptions={{
             tabBarActiveTintColor: 'green',
             headerShown: false
         }}>
-            <Tab.Screen name="Amis" component={Friends} initialParams={{id: id}} options={{
+            <Tab.Screen name="Amis" component={Friends} initialParams={{id, friends}} options={{
                 tabBarIcon: ({color, size}) => (
                     <FontAwesome name="users" color={color} size={size}/>
                 )
             }}/>
-            <Tab.Screen name="Moi" component={Self} initialParams={{id: id}} options={{
+            <Tab.Screen name="Moi" component={Self} initialParams={{id}} options={{
                 tabBarIcon: ({color, size}) => (
                     <FontAwesome name="user" color={color} size={size}/>
-                )
-            }}/>
-            <Tab.Screen name="Prono'Bac" component={PronoBac} initialParams={{id: id}} options={{
-                tabBarIcon: ({color, size}) => (
-                    <FontAwesome name="area-chart" color={color} size={size}/>
                 )
             }}/>
         </Tab.Navigator>
