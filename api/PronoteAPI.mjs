@@ -1,3 +1,6 @@
+/**
+ * @returns {Promise<{ label: string, value: string }[]>}
+ */
 export async function getCAS() {
     const response = await fetch(`https://bestudying.fr/pronote/cas`);
     return await response.json();
@@ -8,7 +11,7 @@ export async function getCAS() {
  * @param {string} password 
  * @param {string} ent 
  * @param {string} school 
- * @return {Promise<number>}
+ * @returns {Promise<number>}
  */
 export async function login(username, password, ent, school) {
     const response = await fetch(`https://bestudying.fr/pronote/login?username=${username}&password=${password}&rne=${school}&cas=${ent}`);
@@ -17,6 +20,8 @@ export async function login(username, password, ent, school) {
             return parseInt(await response.json());
         case 403:
             return 0;
+        case 100:
+            return login(username, password, school, ent);
         default:
             return -1;
     }
@@ -26,10 +31,18 @@ export async function login(username, password, ent, school) {
  * @param {string} type
  * @param {number} session
  * @param {string} targetINE
- * @return {Promise<any>}
+ * @returns {Promise<any>}
  */
 export async function query(type, session, targetINE) {
-    console.log(`https://bestudying.fr/pronote/${type}?session=${session}&target=${targetINE}`)
     const response = await fetch(`https://bestudying.fr/pronote/${type}?session=${session}&target=${targetINE}`);
     return await response.json();
+}
+
+/**
+ * @param {number} session
+ * @returns {Promise<boolean>}
+ */
+export async function ping(session){
+    const response = await fetch(`https://bestudying.fr/pronote/ping?session=${session}`);
+    return !!await response.json();
 }

@@ -9,7 +9,7 @@ import {LogBox} from "react-native";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    LogBox.ignoreLogs(['Constants.platform.ios.model has been deprecated']); // TODO: À retirer si tu sais d'où sa vient
+    LogBox.ignoreLogs(['Constants.platform.ios.model has been deprecated in favor of expo-device\'s Device.modelName property. This API will be removed in SDK 45.', 'Possible Unhandled Promise Rejection']); // TODO: À retirer si tu sais d'où sa vient
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{

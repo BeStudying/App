@@ -199,9 +199,9 @@ async function tryLogin(navigation: any, loadingCallback: (value: boolean) => vo
         await AsyncStorage.setItem('ent', ent);
         await AsyncStorage.setItem('school', school);
     } else if (!id) {
-        Alert.alert("Identifiant et/ou mot de passe invalide(s).");
+        Alert.alert("Connexion au serveur refusée", "Identifiant et/ou mot de passe invalide(s).");
     } else {
-        Alert.alert("La connexion a échouée. Veuillez réessayer ultérieurement.");
+        Alert.alert("Échec de la connexion", "Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
     }
     loadingCallback(false);
 }
