@@ -36,23 +36,39 @@ function CustomDrawerContent(props: any) {
     );
 }
 
+const NoFriends = () => (
+    <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
+        <Text style={{textAlign: 'center', fontWeight: 'bold'}}>Vous n'avez pas d'Amis. 😢</Text>
+    </Card>
+);
+
 const FriendTimetable = ({route}: DrawerScreenProps<any, string>) => {
     const [timedata, setTimedata] = useState<Lesson[]>([]);
-    query('timetable', route.params?.studentId, route.params?.friendINE).then(data => {
-        setTimedata(data)
+    const [hasFetchTimetable, setHasFetchTimetable] = useState<boolean>(false);
+
+    if (!hasFetchTimetable) query('timetable', route.params?.studentId, route.params?.friendINE).then(data => {
+        setTimedata(data);
+        setHasFetchTimetable(true);
     });
+
     return (<Timetable timetable={timedata} friendName={route.params?.friendName}/>);
 }
 const FriendMarks = ({route}: DrawerScreenProps<any, string>) => {
     return (
         <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
-            <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne
-                vous a pas autorisé à voir ses Notes.</Text></Card>)
+            <Text style={{textAlign: 'center'}}><Text
+                style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne
+                vous a pas autorisé à voir ses Notes.</Text>
+        </Card>
+    );
 }
 const FriendHomeworks = ({route}: DrawerScreenProps<any, string>) => (
     <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
-        <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne vous
-            a pas autorisé à voir ses Devoirs.</Text></Card>);
+        <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne
+            vous
+            a pas autorisé à voir ses Devoirs.</Text>
+    </Card>
+);
 
 const Friend = function ({route}: DrawerScreenProps<any, string>) {
     LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
@@ -75,21 +91,25 @@ const Friend = function ({route}: DrawerScreenProps<any, string>) {
 
 export default function Friends({route}: DrawerScreenProps<any, "Amis">) {
     const id: number = route.params?.id;
-    return (
-        <Drawer.Navigator
-            drawerContent={(props) => <CustomDrawerContent {...props}/>}
-            screenOptions={{
-                drawerActiveTintColor: '#109e00',
-                drawerActiveBackgroundColor: '#ddffd9',
-                headerShown: false,
-                drawerType: 'front'
-            }}
-        >
-            {route.params?.friends.map((friendINE: string) => {
+    const renderFriends = () => {
+        if (route.params?.friends?.length ?? 0 > 0) {
+            return route.params?.friends?.map((friendINE: string) => {
                 const [profilePicture, setProfilePicture] = useState<string>("https://i.imgur.com/tbvsqWK.png");
                 const [nom, setNom] = useState<string>("John Doe");
-                query("photo", id, friendINE).then(url => setProfilePicture(url));
-                query("nom", id, friendINE).then(nom => setNom(nom));
+
+                const [hasFetchProfilePicture, setHasFetchProfilePicture] = useState<boolean>(false);
+                const [hasFetchNom, setHasFetchNom] = useState<boolean>(false);
+
+                if (!hasFetchProfilePicture) query("photo", id, friendINE).then(url => {
+                    setProfilePicture(url);
+                    setHasFetchProfilePicture(true);
+                });
+
+                if (!hasFetchNom) query("nom", id, friendINE).then(nom => {
+                    setNom(nom);
+                    setHasFetchNom(true);
+                });
+
                 return (
                     <Drawer.Screen name={nom} key={friendINE} component={Friend}
                                    initialParams={{friendINE: friendINE, friendName: nom, studentId: id}} options={{
@@ -101,7 +121,22 @@ export default function Friends({route}: DrawerScreenProps<any, "Amis">) {
                             }}/>
                     }}/>);
             })
-            }
+        }
+        return (
+            <Drawer.Screen component={NoFriends} name={"Sans Amis.."}/>
+        );
+    }
+    return (
+        <Drawer.Navigator
+            drawerContent={(props) => <CustomDrawerContent {...props}/>}
+            screenOptions={{
+                drawerActiveTintColor: '#109e00',
+                drawerActiveBackgroundColor: '#ddffd9',
+                headerShown: false,
+                drawerType: 'front'
+            }}
+        >
+            {renderFriends()}
         </Drawer.Navigator>
     );
 }

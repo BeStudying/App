@@ -47,7 +47,7 @@ export default function Login(props: any) {
                 }, 10000);
             }}/>
 
-    if (!entData.length) (async () => setENTData(await getCAS()))();
+    if (entData.length === 0) (async () => setENTData(await getCAS()))();
 
     (async (query: string) => {
         if (query === lastQuery) return; // Prevents refresh too fast (laggy + rate limited)
