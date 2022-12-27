@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-export default function CGU({navigation}: { navigation: any }) {
+export default function CGU(): JSX.Element {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
             <ScrollView>

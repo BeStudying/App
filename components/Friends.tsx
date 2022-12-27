@@ -1,26 +1,21 @@
 // noinspection JSUnusedGlobalSymbols
 
 import * as React from 'react';
+import {useState} from 'react';
 import {Alert, Image, LogBox, Text, View} from 'react-native';
 import type {Lesson} from './Timetable';
-import type {DrawerScreenProps} from '@react-navigation/drawer';
-import {
-    createDrawerNavigator,
-    DrawerContentScrollView,
-    DrawerItem,
-    DrawerItemList,
-} from '@react-navigation/drawer';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Timetable from './Timetable';
+import type {DrawerScreenProps} from '@react-navigation/drawer';
+import {createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList,} from '@react-navigation/drawer';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import {useState} from "react";
 import {query} from "../api/PronoteAPI.mjs";
 import {Card} from 'react-native-paper';
 
 const Drawer = createDrawerNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
-function CustomDrawerContent(props: any) {
+function CustomDrawerContent(props: any): JSX.Element {
     return (
         <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
@@ -36,13 +31,13 @@ function CustomDrawerContent(props: any) {
     );
 }
 
-const NoFriends = () => (
+const NoFriends = (): JSX.Element => (
     <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
         <Text style={{textAlign: 'center', fontWeight: 'bold'}}>Vous n'avez pas d'Amis. 😢</Text>
     </Card>
 );
 
-const FriendTimetable = ({route}: DrawerScreenProps<any, string>) => {
+const FriendTimetable = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
     const [timedata, setTimedata] = useState<Lesson[]>([]);
     const [hasFetchTimetable, setHasFetchTimetable] = useState<boolean>(false);
 
@@ -53,7 +48,7 @@ const FriendTimetable = ({route}: DrawerScreenProps<any, string>) => {
 
     return (<Timetable timetable={timedata} friendName={route.params?.friendName}/>);
 }
-const FriendMarks = ({route}: DrawerScreenProps<any, string>) => {
+const FriendMarks = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
     return (
         <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
             <Text style={{textAlign: 'center'}}><Text
@@ -62,7 +57,7 @@ const FriendMarks = ({route}: DrawerScreenProps<any, string>) => {
         </Card>
     );
 }
-const FriendHomeworks = ({route}: DrawerScreenProps<any, string>) => (
+const FriendHomeworks = ({route}: DrawerScreenProps<any, string>): JSX.Element => (
     <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
         <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne
             vous
@@ -70,7 +65,7 @@ const FriendHomeworks = ({route}: DrawerScreenProps<any, string>) => (
     </Card>
 );
 
-const Friend = function ({route}: DrawerScreenProps<any, string>) {
+const Friend = function ({route}: DrawerScreenProps<any, string>): JSX.Element {
     LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
     return (
         <TopTab.Navigator initialRouteName="Timetable" screenOptions={{
@@ -89,9 +84,9 @@ const Friend = function ({route}: DrawerScreenProps<any, string>) {
     );
 }
 
-export default function Friends({route}: DrawerScreenProps<any, "Amis">) {
+export default function Friends({route}: DrawerScreenProps<any, "Amis">): JSX.Element {
     const id: number = route.params?.id;
-    const renderFriends = () => {
+    const renderFriends = (): JSX.Element => {
         if (route.params?.friends?.length ?? 0 > 0) {
             return route.params?.friends?.map((friendINE: string) => {
                 const [profilePicture, setProfilePicture] = useState<string>("https://i.imgur.com/tbvsqWK.png");
@@ -123,7 +118,10 @@ export default function Friends({route}: DrawerScreenProps<any, "Amis">) {
             })
         }
         return (
-            <Drawer.Screen component={NoFriends} name={"Sans Amis.."}/>
+            <Drawer.Screen component={NoFriends} name={"Sans Amis.."} options={{
+                drawerActiveTintColor: "white",
+                drawerActiveBackgroundColor: "white",
+            }}/>
         );
     }
     return (

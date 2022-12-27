@@ -44,5 +44,5 @@ export async function query(type, session, targetINE) {
  */
 export async function ping(session){
     const response = await fetch(`https://bestudying.fr/pronote/ping?session=${session}`);
-    return !!await response.json();
+    return response.status === 200 && !!parseInt(await response.json());
 }

@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import Login from './Login';
 import {DrawerScreenProps} from "@react-navigation/drawer";
 
-function Show(props: { login: boolean; navigation: object }) {
+function Show(props: { login: boolean; navigation: object }): JSX.Element {
     return (
         <View style={styles.app}>
             <View style={{paddingBottom: '50%'}}/>
@@ -12,7 +12,7 @@ function Show(props: { login: boolean; navigation: object }) {
     );
 }
 
-export default function Main({navigation}: DrawerScreenProps<any, "Main">) {
+export default function Main({navigation}: DrawerScreenProps<any, "Main">): JSX.Element {
     return (
         <Show login={true} navigation={navigation}/>
     );

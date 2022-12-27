@@ -18,17 +18,17 @@ export type Lesson = {
     room: string;
 }
 
-export default function Timetable(props: { timetable: Lesson[], friendName: string }) {
+export default function Timetable(props: { timetable: Lesson[], friendName: string }): JSX.Element {
     return (
         <ScrollView style={{backgroundColor: 'white'}}>
             {props.timetable.length > 0 ? props.timetable.map((element) => {
-                const renderStatus = () => {
+                const renderStatus = (): JSX.Element | undefined => {
                     if (!element.status) return;
                     return (<Text
                         style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>);
 
                 }
-                const renderHour = () => {
+                const renderHour = (): string => {
                     const date = new Date(element.from);
                     return `${date.getHours()}h${date.getMinutes()}`;
                 }

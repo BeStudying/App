@@ -1,14 +1,25 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import React, {useState} from 'react';
-import {ActivityIndicator, Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+    ActivityIndicator,
+    Alert,
+    Button,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput, View
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
 import {getCAS, login} from '../api/PronoteAPI.mjs';
 import {Dropdown} from 'react-native-element-dropdown';
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 
 let lastQuery: string | null = null;
 
-export default function Login(props: any) {
+export default function Login(props: any): JSX.Element {
     const [defaultEntries, setDefaultEntries] = useState<boolean>(false);
 
     const [username, setUsername] = useState<string>('');
@@ -28,49 +39,44 @@ export default function Login(props: any) {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const renderENT = () => (ent || isFocusENT)
+    const renderENT = (): JSX.Element | null => (ent || isFocusENT)
         ? (<Text style={[styles.label, isFocusENT && {color: 'green'}]}>ENT</Text>)
         : null;
 
-    const renderSchool = () => (school || isFocusSchool)
+    const renderSchool = (): JSX.Element | null => (school || isFocusSchool)
         ? (<Text style={[styles.label, isFocusSchool && {color: 'green'}]}>École</Text>)
         : null;
 
-    const renderConnect = () =>
+    const renderConnect = (): JSX.Element =>
         isLoading
             ? <ActivityIndicator size="large" color="green"/>
-            : <Button title='Se Connecter' color='green' onPress={() => {
-                tryLogin(props.navigation, setIsLoading, username, password, ent, school)
-                setIsLoading(true)
-                setTimeout(() => {
-                    setIsLoading(false)
-                }, 10000);
+            : <Button title='Se Connecter' color='green' onPress={(): void => {
+                setIsLoading(true);
+                tryLogin(props.navigation, setIsLoading, username, password, ent, school);
+                setTimeout(() => setIsLoading(false), 10000);
             }}/>
 
-    if (entData.length === 0) (async () => setENTData(await getCAS()))();
+    if (entData.length === 0) (async (): Promise<void> => setENTData(await getCAS()))();
 
-    (async (query: string) => {
+    (async (query: string): Promise<void> => {
         if (query === lastQuery) return; // Prevents refresh too fast (laggy + rate limited)
         const data: any = await getSchools(query);
         setSchoolsData(data);
         lastQuery = query
     })(schoolQuery);
 
+    if (!defaultEntries) (async (): Promise<void> => {
+        const username: string = await AsyncStorage.getItem('username') ?? '';
+        const password: string = await AsyncStorage.getItem('password') ?? '';
+        const ent: string | null = await AsyncStorage.getItem('ent') ?? null;
+        const school: string | null = await AsyncStorage.getItem('school') ?? null;
 
-    if (!defaultEntries) {
-        (async () => {
-            const username: string = await AsyncStorage.getItem('username') ?? '';
-            const password: string = await AsyncStorage.getItem('password') ?? '';
-            const ent: string | null = await AsyncStorage.getItem('ent') ?? null;
-            const school: string | null = await AsyncStorage.getItem('school') ?? null;
-
-            setUsername(username);
-            setPassword(password);
-            setENT(ent);
-            setSchool(school);
-            setDefaultEntries(true);
-        })();
-    }
+        setUsername(username);
+        setPassword(password);
+        setENT(ent);
+        setSchool(school);
+        setDefaultEntries(true);
+    })();
 
     return (
         <SafeAreaView>
@@ -84,8 +90,8 @@ export default function Login(props: any) {
                     style={[styles.input,
                         !username && {borderColor: 'black'},
                         (isFocusUsername && !(isFocusENT || isFocusSchool)) && {borderColor: 'blue'}]}
-                    onFocus={() => setIsFocusUsername(true)}
-                    onBlur={() => setIsFocusUsername(false)}
+                    onFocus={(): void => setIsFocusUsername(true)}
+                    onBlur={(): void => setIsFocusUsername(false)}
                     placeholder="Nom d'Utilisateur"
                     placeholderTextColor="black"
                     value={username}
@@ -95,8 +101,8 @@ export default function Login(props: any) {
                     style={[styles.input,
                         !password && {borderColor: 'black'},
                         (isFocusPassword && !(isFocusENT || isFocusSchool)) && {borderColor: 'blue'}]}
-                    onFocus={() => setIsFocusPassword(true)}
-                    onBlur={() => setIsFocusPassword(false)}
+                    onFocus={(): void => setIsFocusPassword(true)}
+                    onBlur={(): void => setIsFocusPassword(false)}
                     placeholder="Mot de Passe"
                     placeholderTextColor="black"
                     secureTextEntry={true}
@@ -122,9 +128,9 @@ export default function Login(props: any) {
                         placeholder={!isFocusENT ? 'Sélectionner votre ENT' : '...'}
                         searchPlaceholder="Rechercher"
                         value={ent}
-                        onFocus={() => setIsFocusENT(true)}
-                        onBlur={() => setIsFocusENT(false)}
-                        onChange={(item) => {
+                        onFocus={(): void => setIsFocusENT(true)}
+                        onBlur={(): void => setIsFocusENT(false)}
+                        onChange={(item): void => {
                             setENT(item.value);
                             setIsFocusENT(false);
                         }}
@@ -143,8 +149,8 @@ export default function Login(props: any) {
                         iconStyle={styles.iconStyle}
                         data={schoolsData}
                         search
-                        searchQuery={(keyword, labelValue) => {
-                            setSchoolQuery(keyword)
+                        searchQuery={(keyword): boolean => {
+                            setSchoolQuery(keyword);
                             return true;
                         }}
                         maxHeight={300}
@@ -153,9 +159,9 @@ export default function Login(props: any) {
                         placeholder={school ? school : (!isFocusSchool ? 'Rechercher votre établissement publique' : '...')}
                         searchPlaceholder="Rechercher"
                         value={school}
-                        onFocus={() => setIsFocusSchool(true)}
-                        onBlur={() => setIsFocusSchool(false)}
-                        onChange={(item) => {
+                        onFocus={(): void => setIsFocusSchool(true)}
+                        onBlur={(): void => setIsFocusSchool(false)}
+                        onChange={(item): void => {
                             setSchool(item.value);
                             setIsFocusSchool(false);
                         }}
@@ -167,29 +173,27 @@ export default function Login(props: any) {
     );
 }
 
-async function tryLogin(navigation: any, loadingCallback: (value: boolean) => void, username: string, password: string, ent: string | null, school: string | null) {
+async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallback: (value: boolean) => void, username: string, password: string, ent: string | null, school: string | null): Promise<void> {
     if (!username) {
         loadingCallback(false);
-        Alert.alert("Veuillez entrer un nom d'utilisateur !");
+        Alert.alert("Connexion impossible", "Vous devez entrer un nom d'utilisateur.");
         return;
     } else if (!password) {
         loadingCallback(false);
-        Alert.alert("Veuillez entrer un mot de passe !");
+        Alert.alert("Connexion impossible", "Vous devez entrer un mot de passe.");
         return;
     } else if (!ent) {
         loadingCallback(false);
-        Alert.alert("Veuillez sélectionner un ENT !");
+        Alert.alert("Connexion impossible", "Vous devez sélectionner un ENT.");
         return;
     } else if (!school) {
         loadingCallback(false);
-        Alert.alert("Veuillez sélectionner un établissement !");
+        Alert.alert("Connexion impossible", "Vous devez sélectionner un établissement.");
         return;
     }
     const id = await login(username, password, ent, school);
     if (id > 0) {
-        navigation.navigate('Home', {
-            id: id
-        });
+        navigation.navigate('Home', {id});
         navigation.reset({
             index: 0,
             routes: [{name: 'Home'}],
