@@ -1,6 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
 
-import * as React from 'react';
 import {useState} from 'react';
 import {Alert, Image, LogBox, Text, View} from 'react-native';
 import type {Lesson} from './Timetable';
@@ -32,8 +31,8 @@ function CustomDrawerContent(props: any): JSX.Element {
 }
 
 const NoFriends = (): JSX.Element => (
-    <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
-        <Text style={{textAlign: 'center', fontWeight: 'bold'}}>Vous n'avez pas d'Amis. 😢</Text>
+    <Card style={{top: 250, padding: 15, marginHorizontal: 13}}>
+        <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 20}}>Vous n'avez pas encore d'Amis 😅</Text>
     </Card>
 );
 
@@ -84,46 +83,46 @@ const Friend = function ({route}: DrawerScreenProps<any, string>): JSX.Element {
     );
 }
 
-export default function Friends({route}: DrawerScreenProps<any, "Amis">): JSX.Element {
+export default function Friends({route, navigation}: DrawerScreenProps<any, 'Amis'>): JSX.Element {
     const id: number = route.params?.id;
-    const renderFriends = (): JSX.Element => {
-        if (route.params?.friends?.length ?? 0 > 0) {
-            return route.params?.friends?.map((friendINE: string) => {
-                const [profilePicture, setProfilePicture] = useState<string>("https://i.imgur.com/tbvsqWK.png");
-                const [nom, setNom] = useState<string>("John Doe");
-
-                const [hasFetchProfilePicture, setHasFetchProfilePicture] = useState<boolean>(false);
-                const [hasFetchNom, setHasFetchNom] = useState<boolean>(false);
-
-                if (!hasFetchProfilePicture) query("photo", id, friendINE).then(url => {
-                    setProfilePicture(url);
-                    setHasFetchProfilePicture(true);
-                });
-
-                if (!hasFetchNom) query("nom", id, friendINE).then(nom => {
-                    setNom(nom);
-                    setHasFetchNom(true);
-                });
-
-                return (
-                    <Drawer.Screen name={nom} key={friendINE} component={Friend}
-                                   initialParams={{friendINE: friendINE, friendName: nom, studentId: id}} options={{
-                        drawerIcon: ({size}) =>
-                            <Image source={{uri: profilePicture}} style={{
-                                width: size,
-                                height: size,
-                                borderRadius: 50
-                            }}/>
-                    }}/>);
-            })
-        }
-        return (
-            <Drawer.Screen component={NoFriends} name={"Sans Amis.."} options={{
+    const renderFriends = (friends: string[]): JSX.Element[] | JSX.Element => {
+        if (friends.length === 0) return (
+            <Drawer.Screen key={"NoFriends"} component={NoFriends} name={"Sans Amis.."} options={{
                 drawerActiveTintColor: "white",
                 drawerActiveBackgroundColor: "white",
             }}/>
         );
+        return friends.map((friendINE: string) => {
+            const [profilePicture, setProfilePicture] = useState<string>("https://i.imgur.com/tbvsqWK.png");
+            const [nom, setNom] = useState<string>("John Doe");
+            const [hasFetchProfile, setHasFetchProfile] = useState<boolean>(false);
+
+            if (!hasFetchProfile) {
+                query("nom", id, friendINE).then(nom => {
+                    setNom(nom);
+                    setHasFetchProfile(true);
+                });
+
+                query("photo", id, friendINE).then(url => {
+                    setProfilePicture(url);
+                    setHasFetchProfile(true);
+                });
+            }
+
+            return (
+                <Drawer.Screen name={nom} key={friendINE} component={Friend}
+                               initialParams={{friendINE, friendName: nom, studentId: id}} options={{
+                    drawerIcon: ({size}) =>
+                        <Image source={{uri: profilePicture}} style={{
+                            width: size,
+                            height: size,
+                            borderRadius: 50
+                        }}/>
+                }}/>
+            );
+        });
     }
+
     return (
         <Drawer.Navigator
             drawerContent={(props) => <CustomDrawerContent {...props}/>}
@@ -133,8 +132,9 @@ export default function Friends({route}: DrawerScreenProps<any, "Amis">): JSX.El
                 headerShown: false,
                 drawerType: 'front'
             }}
+            defaultStatus={route.params?.friends.length ?? 0 > 0 ? 'closed' : 'open'}
         >
-            {renderFriends()}
+            {renderFriends(route.params?.friends)}
         </Drawer.Navigator>
     );
 }

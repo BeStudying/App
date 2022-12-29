@@ -1,3 +1,7 @@
+/**
+ * @param {string} query
+ * @returns {Promise<{label: string, value: string}[]>}
+ */
 export default async function getSchools(query) {
     const response = await fetch(`https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-annuaire-education&q=${query}&lang=fr`);
     const data = await response.json();

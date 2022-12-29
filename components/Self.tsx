@@ -1,11 +1,11 @@
-import * as React from 'react';
 import {SafeAreaView} from 'react-native';
-import {DrawerScreenProps} from "@react-navigation/drawer";
+import {DrawerActions, NavigationProp} from "@react-navigation/native";
 
-export default function Self(): JSX.Element {
+export default function Self({navigation}: {navigation: NavigationProp<any>}): JSX.Element {
+
     return (
         <SafeAreaView>
 
         </SafeAreaView>
-    );
+    )
 }

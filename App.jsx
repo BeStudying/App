@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Main from './components/Main';
 import Home from './components/Home';
 import CGU from './components/CGU';

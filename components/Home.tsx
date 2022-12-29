@@ -1,12 +1,11 @@
-import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Navigation from './Navigation';
-import {DrawerScreenProps} from "@react-navigation/drawer";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
-export default function Home({route, navigation}: DrawerScreenProps<any, "Home">): JSX.Element {
+export default function Home({route, navigation}: NativeStackScreenProps<any, "Home">): JSX.Element {
     return (
         <View style={styles.app}>
-            <Navigation route={route} navigation={navigation}/>
+            <Navigation route={route} navigation={navigation} friends={route.params?.friends ?? []}/>
         </View>
     );
 }

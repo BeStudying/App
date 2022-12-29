@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Login from './Login';
 import {DrawerScreenProps} from "@react-navigation/drawer";

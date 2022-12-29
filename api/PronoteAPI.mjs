@@ -30,7 +30,7 @@ export async function login(username, password, ent, school) {
 /**
  * @param {string} type
  * @param {number} session
- * @param {string} targetINE
+ * @param {string?} targetINE
  * @returns {Promise<any>}
  */
 export async function query(type, session, targetINE) {
