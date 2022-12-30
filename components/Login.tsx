@@ -1,15 +1,16 @@
 // noinspection JSIgnoredPromiseFromCall
 
 import {useState} from 'react';
-import {ActivityIndicator, Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
 import {getCAS, login} from '../api/PronoteAPI.mjs';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
-
-let lastQuery: string | null = null;
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import CInput from "react-native-element-dropdown/src/components/TextInput";
 
 export default function Login(props: any): JSX.Element {
     const [defaultEntries, setDefaultEntries] = useState<boolean>(false);
@@ -20,14 +21,14 @@ export default function Login(props: any): JSX.Element {
     const [password, setPassword] = useState<string>('');
     const [isFocusPassword, setIsFocusPassword] = useState<boolean>(false);
 
-    const [ent, setENT] = useState<string | null>(null);
+    const [ent, setENT] = useState<string | undefined>(undefined);
     const [isFocusENT, setIsFocusENT] = useState<boolean>(false);
     const [entData, setENTData] = useState<{ label: string, value: string }[]>([]);
 
-    const [school, setSchool] = useState<string | null>(null);
+    const [schoolRNE, setSchoolRNE] = useState<string | undefined>(undefined);
+    const [schoolName, setSchoolName] = useState<string | undefined>(undefined);
     const [isFocusSchool, setIsFocusSchool] = useState<boolean>(false);
     const [schoolsData, setSchoolsData] = useState<{ label: string, value: string }[]>([]);
-    const [schoolQuery, setSchoolQuery] = useState<string>('');
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -35,38 +36,36 @@ export default function Login(props: any): JSX.Element {
         ? (<Text style={[styles.label, isFocusENT && {color: 'green'}]}>ENT</Text>)
         : null;
 
-    const renderSchool = (): JSX.Element | null => (school || isFocusSchool)
-        ? (<Text style={[styles.label, isFocusSchool && {color: 'green'}]}>École</Text>)
+    const renderSchool = (): JSX.Element | null => (schoolRNE || isFocusSchool)
+        ? (<Text style={[styles.label, isFocusSchool && {color: 'green'}]}>Établissement</Text>)
         : null;
 
     const renderConnect = (): JSX.Element =>
         isLoading
             ? <ActivityIndicator size="large" color="green"/>
-            : <Button title='Se Connecter' color='green' onPress={(): void => {
-                setIsLoading(true);
-                tryLogin(props.navigation, setIsLoading, username, password, ent, school);
-                setTimeout(() => setIsLoading(false), 10000);
-            }}/>
+            : (
+                <Pressable style={styles.button} onPress={() => {
+                    setIsLoading(true);
+                    tryLogin(props.navigation, setIsLoading, {username, password, ent, schoolRNE, schoolName});
+                    setTimeout(() => setIsLoading(false), 10000);
+                }}>
+                    <Text style={styles.buttonText}>Se Connecter</Text>
+                </Pressable>);
 
     if (entData.length === 0) (async (): Promise<void> => setENTData(await getCAS()))();
-
-    (async (query: string): Promise<void> => {
-        if (query === lastQuery) return; // Prevents refresh too fast (laggy + rate limited)
-        const data: any = await getSchools(query);
-        setSchoolsData(data);
-        lastQuery = query
-    })(schoolQuery);
 
     if (!defaultEntries) (async (): Promise<void> => {
         const username: string = await AsyncStorage.getItem('username') ?? '';
         const password: string = await AsyncStorage.getItem('password') ?? '';
-        const ent: string | null = await AsyncStorage.getItem('ent') ?? null;
-        const school: string | null = await AsyncStorage.getItem('school') ?? null;
+        const ent: string | undefined = await AsyncStorage.getItem('ent') ?? undefined;
+        const schoolRNE: string | undefined = await AsyncStorage.getItem('schoolRNE') ?? undefined;
+        const schoolName: string | undefined = await AsyncStorage.getItem('schoolName') ?? undefined;
 
         setUsername(username);
         setPassword(password);
         setENT(ent);
-        setSchool(school);
+        setSchoolRNE(schoolRNE);
+        setSchoolName(schoolName);
         setDefaultEntries(true);
     })();
 
@@ -109,16 +108,13 @@ export default function Login(props: any): JSX.Element {
                         style={[styles.dropdown,
                             !ent && {borderColor: 'black'},
                             isFocusENT && {borderColor: 'blue'}]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
+                        iconStyle={[styles.iconStyle, isFocusENT && {tintColor: 'green'}]}
                         data={entData}
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocusENT ? 'Sélectionner votre ENT' : '...'}
-                        searchPlaceholder="Rechercher"
+                        renderLeftIcon={() => <MaterialCommunityIcons name='web' color={isFocusENT ? 'green' : 'black'}
+                                                                      size={20} style={{margin: 7}}/>}
                         value={ent}
                         onFocus={(): void => setIsFocusENT(true)}
                         onBlur={(): void => setIsFocusENT(false)}
@@ -133,28 +129,43 @@ export default function Login(props: any): JSX.Element {
                     <Dropdown
                         statusBarIsTranslucent={true}
                         style={[styles.dropdown,
-                            !school && {borderColor: 'black'},
+                            !schoolRNE && {borderColor: 'black'},
                             isFocusSchool && {borderColor: 'blue'}]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
+                        iconStyle={[styles.iconStyle, isFocusSchool && {tintColor: 'green'}]}
                         data={schoolsData}
                         search
-                        searchQuery={(keyword): boolean => {
-                            setSchoolQuery(keyword);
-                            return true;
+                        placeholder={schoolRNE ? schoolName ?? schoolRNE : "..."}
+                        dropdownPosition='top'
+                        renderInputSearch={() => {
+                            return <CInput
+                                style={[styles.input, styles.inputSearchStyle]}
+                                onChangeText={(search): void => {
+                                    if (search.length < 5 || search.length > 6) return setSchoolsData([]);
+                                    getSchools(search).then(data => {
+                                        setSchoolsData(data);
+                                    });
+                                }}
+                                autoCorrect={false}
+                                keyboardType='number-pad'
+                                placeholder={"Entrer le code postal de l'établissement"}
+                                placeholderTextColor="gray"
+                            />
                         }}
+                        renderLeftIcon={() => <FontAwesome5Icon name='school'
+                                                                color={isFocusSchool ? 'green' : 'black'}
+                                                                size={15} style={{margin: 7}}/>}
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder={school ? school : (!isFocusSchool ? 'Rechercher votre établissement publique' : '...')}
-                        searchPlaceholder="Rechercher"
-                        value={school}
+                        confirmSelectItem
+                        value={schoolRNE}
                         onFocus={(): void => setIsFocusSchool(true)}
-                        onBlur={(): void => setIsFocusSchool(false)}
+                        onBlur={(): void => {
+                            setIsFocusSchool(false);
+                        }}
                         onChange={(item): void => {
-                            setSchool(item.value);
+                            setSchoolName(item.label);
+                            setSchoolRNE(item.value);
                             setIsFocusSchool(false);
                         }}
                     />
@@ -165,7 +176,13 @@ export default function Login(props: any): JSX.Element {
     );
 }
 
-async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallback: (value: boolean) => void, username: string, password: string, ent: string | null, school: string | null): Promise<void> {
+async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallback: (value: boolean) => void, {
+    username,
+    password,
+    ent,
+    schoolRNE,
+    schoolName
+}: { username: string, password: string, ent?: string, schoolRNE?: string, schoolName?: string }): Promise<void> {
     if (!username) {
         loadingCallback(false);
         Alert.alert("Connexion impossible", "Vous devez entrer un nom d'utilisateur.");
@@ -178,12 +195,12 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
         loadingCallback(false);
         Alert.alert("Connexion impossible", "Vous devez sélectionner un ENT.");
         return;
-    } else if (!school) {
+    } else if (!schoolRNE) {
         loadingCallback(false);
         Alert.alert("Connexion impossible", "Vous devez sélectionner un établissement.");
         return;
     }
-    const id = await login(username, password, ent, school);
+    const id = await login(username, password, ent, schoolRNE);
     if (id > 0) {
         navigation.navigate('Home', {id});
         navigation.reset({
@@ -193,7 +210,8 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
         await AsyncStorage.setItem('username', username);
         await AsyncStorage.setItem('password', password);
         await AsyncStorage.setItem('ent', ent);
-        await AsyncStorage.setItem('school', school);
+        await AsyncStorage.setItem('schoolRNE', schoolRNE);
+        if (schoolName) await AsyncStorage.setItem('schoolName', schoolName);
     } else if (!id) {
         Alert.alert("Connexion au serveur refusée", "Identifiant et/ou mot de passe invalide(s).");
     } else {
@@ -204,6 +222,7 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: 'white',
         justifyContent: 'center',
         marginBottom: '75%',
         borderRadius: 15,
@@ -241,7 +260,7 @@ const styles = StyleSheet.create({
     },
     label: {
         position: 'absolute',
-        backgroundColor: '#f6f3f8',
+        backgroundColor: 'white',
         left: 22,
         top: 2,
         zIndex: 999,
@@ -255,11 +274,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     iconStyle: {
-        width: 20,
-        height: 20,
+        padding: 20,
     },
     inputSearchStyle: {
         height: 40,
         fontSize: 16,
     },
+    button: {
+        backgroundColor: 'green',
+        margin: 10,
+        padding: 5,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#23ac3ff'
+    },
+    buttonText: {
+        textAlign: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 17,
+    }
 });

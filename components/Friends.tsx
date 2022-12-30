@@ -22,7 +22,7 @@ function CustomDrawerContent(props: any): JSX.Element {
                 <Text style={{textAlign: 'center'}}>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
                 <DrawerItem
                     labelStyle={{color: 'green'}}
-                    icon={({size}) => <FontAwesome color="green" size={size} name={'user-plus'}/>}
+                    icon={({size}) => <FontAwesome color="green" size={size} name='user-plus'/>}
                     label="Ajouter un Ami"
                     onPress={() => Alert.alert('Link to help')}/>
             </View>
@@ -69,7 +69,7 @@ const FriendHomeworks = ({route}: DrawerScreenProps<any, string>): JSX.Element =
 );
 
 const Friend = function ({route}: DrawerScreenProps<any, string>): JSX.Element {
-    LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
+    // LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
     return (
         <TopTab.Navigator initialRouteName="Timetable" screenOptions={{
             animationEnabled: false,
