@@ -6,7 +6,7 @@ import Friends from './Friends';
 import Self from './Self';
 import {ping, query} from "../api/PronoteAPI.mjs";
 import {DrawerActions} from "@react-navigation/native";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import type {NativeStackScreenProps} from "@react-navigation/native-stack";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +16,7 @@ export default function Navigation({
                                        route,
                                        navigation,
                                        friends
-                                   }: NativeStackScreenProps<any, string> & { friends: string[] }): JSX.Element | null {
+                                   }: NativeStackScreenProps<any> & { friends: string[] }): JSX.Element | null {
     id ??= route.params?.id;
     useEffect(() => navigation.setOptions({
         headerLeft: (): JSX.Element => (

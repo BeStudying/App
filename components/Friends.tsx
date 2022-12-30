@@ -1,12 +1,14 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {useEffect, useState} from 'react';
-import {Alert, Image, LogBox, Text, View} from 'react-native';
 import type {Lesson} from './Timetable';
 import Timetable from './Timetable';
+import type {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import type {DrawerScreenProps} from '@react-navigation/drawer';
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList,} from '@react-navigation/drawer';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import type {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
+import {useEffect, useState} from 'react';
+import {Alert, Image, LogBox, Text, View} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {query} from "../api/PronoteAPI.mjs";
 import {Card} from 'react-native-paper';
@@ -14,21 +16,20 @@ import {Card} from 'react-native-paper';
 const Drawer = createDrawerNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
-function CustomDrawerContent(props: any): JSX.Element {
-    return (
-        <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
-            <View style={{marginTop: 15}}>
-                <Text style={{textAlign: 'center'}}>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
-                <DrawerItem
-                    labelStyle={{color: 'green'}}
-                    icon={({size}) => <FontAwesome color="green" size={size} name='user-plus'/>}
-                    label="Ajouter un Ami"
-                    onPress={() => Alert.alert('Link to help')}/>
-            </View>
-        </DrawerContentScrollView>
-    );
-}
+const CustomDrawerContent = (props: any): JSX.Element => (
+    <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <View style={{marginTop: 15}}>
+            <Text style={{textAlign: 'center'}}>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
+            <DrawerItem
+                labelStyle={{color: 'green'}}
+                icon={({size}) => <FontAwesome color="green" size={size} name='user-plus'/>}
+                label="Ajouter un Ami"
+                onPress={() => Alert.alert('Link to help')}/>
+        </View>
+    </DrawerContentScrollView>
+);
+
 
 const NoFriends = ({navigation}: DrawerScreenProps<any, string>): JSX.Element => {
     useEffect(() => navigation.getParent()?.navigate('Amis'));
@@ -40,7 +41,7 @@ const NoFriends = ({navigation}: DrawerScreenProps<any, string>): JSX.Element =>
     );
 }
 
-const FriendTimetable = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
+const FriendTimetable = ({route}: MaterialTopTabScreenProps<any, string>): JSX.Element => {
     const [timedata, setTimedata] = useState<Lesson[]>([]);
     const [hasFetchTimetable, setHasFetchTimetable] = useState<boolean>(false);
 
@@ -51,7 +52,7 @@ const FriendTimetable = ({route}: DrawerScreenProps<any, string>): JSX.Element =
 
     return (<Timetable timetable={timedata} friendName={route.params?.friendName}/>);
 }
-const FriendMarks = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
+const FriendMarks = ({route}: MaterialTopTabScreenProps<any, string>): JSX.Element => {
     return (
         <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
             <Text style={{textAlign: 'center'}}><Text
@@ -60,7 +61,7 @@ const FriendMarks = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
         </Card>
     );
 }
-const FriendHomeworks = ({route}: DrawerScreenProps<any, string>): JSX.Element => (
+const FriendHomeworks = ({route}: MaterialTopTabScreenProps<any, string>): JSX.Element => (
     <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
         <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{route.params?.friendName}</Text> ne
             vous
@@ -68,8 +69,8 @@ const FriendHomeworks = ({route}: DrawerScreenProps<any, string>): JSX.Element =
     </Card>
 );
 
-const Friend = function ({route}: DrawerScreenProps<any, string>): JSX.Element {
-    // LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
+const Friend = function ({route}: DrawerScreenProps<any>): JSX.Element {
+    LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
     return (
         <TopTab.Navigator initialRouteName="Timetable" screenOptions={{
             animationEnabled: false,
@@ -87,7 +88,7 @@ const Friend = function ({route}: DrawerScreenProps<any, string>): JSX.Element {
     );
 }
 
-export default function Friends({route, navigation}: DrawerScreenProps<any, 'Amis'>): JSX.Element {
+export default function Friends({route}: BottomTabScreenProps<any, 'Amis'>): JSX.Element {
     const id: number = route.params?.id;
     const renderFriends = (friends: string[]): JSX.Element[] | JSX.Element => {
         if (friends.length === 0) return (
