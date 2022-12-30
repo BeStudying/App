@@ -4,6 +4,7 @@ import CGU from './components/CGU';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LogBox} from "react-native";
+import Settings from "./components/Settings";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,11 @@ export default function App() {
                         name="CGU"
                         component={CGU}
                         options={{headerTitle: "Conditions Générales d'Utilisation"}}
+                    />
+                    <Stack.Screen
+                        name="Settings"
+                        component={Settings}
+                        options={{headerTitle: "Paramètres"}}
                     />
                 </Stack.Group>
             </Stack.Navigator>

@@ -26,7 +26,7 @@ export default function Navigation({
             }} color='#f6f6f6' size={20}/>
         ),
         headerRight: (): JSX.Element => (
-            <FontAwesome.Button name='gear' backgroundColor={'green'} onPress={() => Alert.alert("Paramètres ici")}
+            <FontAwesome.Button name='gear' backgroundColor={'green'} onPress={() => navigation.navigate('Settings')}
                                 color='#f6f6f6' size={20}/>
         ),
     }));
@@ -43,10 +43,9 @@ export default function Navigation({
     if (!id) return returnToLogin();
     if (nextPing - Date.now() <= 0) {
         ping(id).then((result: boolean): void => {
-            if (!result) {
-                returnToLogin();
-                setNextPing(Infinity);
-            } else setNextPing(Date.now() + 60000);
+            if (result) return setNextPing(Date.now() + 60000);
+            returnToLogin();
+            setNextPing(Infinity);
         });
     }
     if (friends.length === 0) (async (): Promise<void> => {

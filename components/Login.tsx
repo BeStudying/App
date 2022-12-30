@@ -5,7 +5,7 @@ import {ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, Tex
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
-import {getCAS, login} from '../api/PronoteAPI.mjs';
+import {getCAS, login, query} from '../api/PronoteAPI.mjs';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -202,10 +202,11 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
     }
     const id = await login(username, password, ent, schoolRNE);
     if (id > 0) {
-        navigation.navigate('Home', {id});
+        const friends: string[] = await query('friends', id, null);
+        navigation.navigate('Home', {id, friends});
         navigation.reset({
             index: 0,
-            routes: [{name: 'Home'}],
+            routes: [{name: 'Home', params: {id, friends}}],
         });
         await AsyncStorage.setItem('username', username);
         await AsyncStorage.setItem('password', password);
