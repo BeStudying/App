@@ -1,15 +1,7 @@
 // noinspection JSIgnoredPromiseFromCall
 
 import {useState} from 'react';
-import {
-    ActivityIndicator,
-    Alert,
-    Button,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput, View
-} from 'react-native';
+import {ActivityIndicator, Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';

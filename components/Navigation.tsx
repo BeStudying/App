@@ -6,13 +6,17 @@ import Friends from './Friends';
 import Self from './Self';
 import {ping, query} from "../api/PronoteAPI.mjs";
 import {DrawerActions} from "@react-navigation/native";
-import {NativeStackNavigationProp, NativeStackScreenProps} from "@react-navigation/native-stack";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
 const Tab = createBottomTabNavigator();
 
 let id: number | undefined = undefined;
 
-export default function Navigation({route, navigation, friends}: NativeStackScreenProps<any, string> & {friends: string[]}) : JSX.Element | null {
+export default function Navigation({
+                                       route,
+                                       navigation,
+                                       friends
+                                   }: NativeStackScreenProps<any, string> & { friends: string[] }): JSX.Element | null {
     id ??= route.params?.id;
     useEffect(() => navigation.setOptions({
         headerLeft: (): JSX.Element => (
@@ -42,7 +46,7 @@ export default function Navigation({route, navigation, friends}: NativeStackScre
             if (!result) {
                 returnToLogin();
                 setNextPing(Infinity);
-            } else setNextPing(Date.now() + 10000);
+            } else setNextPing(Date.now() + 60000);
         });
     }
     if (friends.length === 0) (async (): Promise<void> => {

@@ -1,6 +1,6 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Alert, Image, LogBox, Text, View} from 'react-native';
 import type {Lesson} from './Timetable';
 import Timetable from './Timetable';
@@ -30,11 +30,15 @@ function CustomDrawerContent(props: any): JSX.Element {
     );
 }
 
-const NoFriends = (): JSX.Element => (
-    <Card style={{top: 250, padding: 15, marginHorizontal: 13}}>
-        <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 20}}>Vous n'avez pas encore d'Amis 😅</Text>
-    </Card>
-);
+const NoFriends = ({navigation}: DrawerScreenProps<any, string>): JSX.Element => {
+    useEffect(() => navigation.getParent()?.navigate('Amis'));
+    return (
+        <Card style={{top: 250, padding: 15, marginHorizontal: 13}}>
+            <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 20}}>Vous n'avez pas encore d'Amis
+                😅</Text>
+        </Card>
+    );
+}
 
 const FriendTimetable = ({route}: DrawerScreenProps<any, string>): JSX.Element => {
     const [timedata, setTimedata] = useState<Lesson[]>([]);
@@ -94,7 +98,7 @@ export default function Friends({route, navigation}: DrawerScreenProps<any, 'Ami
         );
         return friends.map((friendINE: string) => {
             const [profilePicture, setProfilePicture] = useState<string>("https://i.imgur.com/tbvsqWK.png");
-            const [nom, setNom] = useState<string>("John Doe");
+            const [nom, setNom] = useState<string>("Chargement..");
             const [hasFetchProfile, setHasFetchProfile] = useState<boolean>(false);
 
             if (!hasFetchProfile) {
