@@ -1,7 +1,17 @@
 // noinspection JSIgnoredPromiseFromCall
 
 import {useState} from 'react';
-import {ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+    ActivityIndicator,
+    Alert,
+    Pressable,
+    SafeAreaView,
+    StyleProp,
+    StyleSheet,
+    Text,
+    TextInput,
+    View, ViewStyle
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
 import getSchools from '../api/EducationAPI.mjs';
@@ -44,7 +54,9 @@ export default function Login(props: any): JSX.Element {
         isLoading
             ? <ActivityIndicator size="large" color="green"/>
             : (
-                <Pressable style={styles.button} onPress={() => {
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                    pressed && {backgroundColor: 'rgba(35,172,63,0.82)'}]
+                } onPress={() => {
                     setIsLoading(true);
                     tryLogin(props.navigation, setIsLoading, {username, password, ent, schoolRNE, schoolName});
                     setTimeout(() => setIsLoading(false), 10000);
@@ -287,7 +299,7 @@ const styles = StyleSheet.create({
         padding: 5,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#23ac3ff'
+        borderColor: '#23ac3f'
     },
     buttonText: {
         textAlign: 'center',

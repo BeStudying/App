@@ -22,7 +22,7 @@ export default function Navigation({
         headerLeft: (): JSX.Element => (
             <FontAwesome.Button name='address-book' backgroundColor={'green'} onPress={() => {
                 navigation.navigate('Amis');
-                navigation.dispatch(DrawerActions.openDrawer()); // useDrawerStatus() === 'open' ? DrawerActions.closeDrawer() : DrawerActions.openDrawer()
+                navigation.dispatch(DrawerActions.openDrawer());
             }} color='#f6f6f6' size={20}/>
         ),
         headerRight: (): JSX.Element => (

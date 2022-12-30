@@ -1,4 +1,4 @@
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Pressable, SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,38 +10,47 @@ export default function Settings({navigation}: NativeStackScreenProps<any, 'Sett
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
             <Text style={{textAlign: 'center', marginBottom: 100}}>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯</Text>
             <View>
-                <Pressable style={styles.button} onPress={() => {
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                    pressed && {backgroundColor: 'rgb(210, 230, 255)'}]
+                } onPress={() => {
                 }}>
                     <Text style={styles.buttonText}><FontAwesome color={'green'} name={'support'} size={20}/><View
                         style={{paddingHorizontal: 5}}/>Support</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => {
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                    pressed && {backgroundColor: 'rgb(210, 230, 255)'}]
+                } onPress={() => {
                 }}>
                     <Text style={styles.buttonText}><AntDesign color={'green'} name={'sharealt'} size={20}/><View
                         style={{paddingHorizontal: 5}}/>Partager l'Application</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => {
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                    pressed && {backgroundColor: 'rgb(210, 230, 255)'}]
+                } onPress={() => {
                 }}>
                     <Text style={styles.buttonText}><FontAwesome color={'green'} name={'star'} size={18}/><View
                         style={{paddingHorizontal: 5}}/>Noter l'Application</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => navigation.navigate('CGU')}>
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                    pressed && {backgroundColor: 'rgb(210, 230, 255)'}]
+                } onPress={() => navigation.navigate('CGU')}>
                     <Text style={styles.buttonText}><Ionicons color={'green'} name={'information-circle-outline'}
                                                               size={20}/><View
                         style={{paddingHorizontal: 5}}/>Conditions Générales d'Utilisation</Text>
                 </Pressable>
-                <Pressable style={styles.button} onPress={() => {
+                <Pressable
+                    style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                        pressed && {backgroundColor: 'rgb(210, 230, 255)'}]
+                    } onPress={() => {
                 }}>
                     <Text style={styles.buttonText}><MaterialCommunityIcons color={'green'} name={'scale-balance'}
                                                                             size={20}/><View
                         style={{paddingHorizontal: 5}}/>Mentions Légales</Text>
                 </Pressable>
-                <Pressable style={[styles.button, {
-                    marginTop: 50,
-                    backgroundColor: 'rgba(255,66,66,0.87)',
-                    borderColor: 'black'
-                }]}
-                           onPress={(e) => {
+                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button, {
+                    marginTop: 50, backgroundColor: 'rgba(255,66,66,0.87)', borderColor: 'black'
+                }, pressed && {backgroundColor: 'rgba(255,66,66,0.65)'}]}
+                           onPress={() => {
                                navigation.popToTop();
                                navigation.navigate('Main');
                                navigation.reset({
