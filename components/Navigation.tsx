@@ -12,23 +12,18 @@ const Tab = createBottomTabNavigator();
 
 let id: number | undefined = undefined;
 
-export default function Navigation({
-                                       route,
-                                       navigation,
-                                       friends
-                                   }: NativeStackScreenProps<any> & { friends: string[] }): JSX.Element | null {
+export default function Navigation({route, navigation, friends}: NativeStackScreenProps<any> & { friends: string[] }):
+    JSX.Element | null {
     id ??= route.params?.id;
     useEffect(() => navigation.setOptions({
-        headerLeft: (): JSX.Element => (
-            <FontAwesome.Button name='address-book' backgroundColor={'green'} onPress={() => {
-                navigation.navigate('Amis');
-                navigation.dispatch(DrawerActions.openDrawer());
-            }} color='#f6f6f6' size={20}/>
-        ),
-        headerRight: (): JSX.Element => (
-            <FontAwesome.Button name='gear' backgroundColor={'green'} onPress={() => navigation.navigate('Settings')}
-                                color='#f6f6f6' size={20}/>
-        ),
+        headerLeft: (): JSX.Element => <FontAwesome.Button name='address-book' backgroundColor={'green'}
+                                                           onPress={() => {
+                                                               navigation.navigate('Amis');
+                                                               navigation.dispatch(DrawerActions.openDrawer());
+                                                           }} color='#f6f6f6' size={20}/>,
+        headerRight: (): JSX.Element => <FontAwesome.Button name='gear' backgroundColor={'green'}
+                                                            onPress={() => navigation.navigate('Settings')}
+                                                            color='#f6f6f6' size={20}/>,
     }));
     const [nextPing, setNextPing] = useState<number>(Date.now());
     const returnToLogin = (): null => {
@@ -48,26 +43,16 @@ export default function Navigation({
             setNextPing(Infinity);
         });
     }
-    if (friends.length === 0) (async (): Promise<void> => {
-        const friends: string[] = await query('friends', id, null);
-        navigation.navigate('Home', {friends});
-    })();
 
-    return (
-        <Tab.Navigator initialRouteName='Moi' screenOptions={{
-            tabBarActiveTintColor: 'green',
-            headerShown: false
-        }}>
-            <Tab.Screen name='Amis' component={Friends} initialParams={{id, friends}} options={{
-                tabBarIcon: ({color, size}) => (
-                    <FontAwesome name='users' color={color} size={size}/>
-                )
-            }}/>
-            <Tab.Screen name='Moi' component={Self} initialParams={{id}} options={{
-                tabBarIcon: ({color, size}) => (
-                    <FontAwesome name='user' color={color} size={size}/>
-                )
-            }}/>
-        </Tab.Navigator>
-    );
+    return <Tab.Navigator initialRouteName='Moi' screenOptions={{
+        tabBarActiveTintColor: 'green',
+        headerShown: false
+    }}>
+        <Tab.Screen name='Amis' component={Friends} initialParams={{id, friends}} options={{
+            tabBarIcon: ({color, size}) => <FontAwesome name='users' color={color} size={size}/>
+        }}/>
+        <Tab.Screen name='Moi' component={Self} initialParams={{id}} options={{
+            tabBarIcon: ({color, size}) => <FontAwesome name='user' color={color} size={size}/>
+        }}/>
+    </Tab.Navigator>;
 }

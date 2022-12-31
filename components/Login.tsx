@@ -10,7 +10,8 @@ import {
     StyleSheet,
     Text,
     TextInput,
-    View, ViewStyle
+    View,
+    ViewStyle
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card} from 'react-native-paper';
@@ -53,16 +54,15 @@ export default function Login(props: any): JSX.Element {
     const renderConnect = (): JSX.Element =>
         isLoading
             ? <ActivityIndicator size="large" color="green"/>
-            : (
-                <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
-                    pressed && {backgroundColor: 'rgba(35,172,63,0.82)'}]
-                } onPress={() => {
-                    setIsLoading(true);
-                    tryLogin(props.navigation, setIsLoading, {username, password, ent, schoolRNE, schoolName});
-                    setTimeout(() => setIsLoading(false), 10000);
-                }}>
-                    <Text style={styles.buttonText}>Se Connecter</Text>
-                </Pressable>);
+            : <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button,
+                pressed && {backgroundColor: 'rgba(35,172,63,0.82)'}]
+            } onPress={() => {
+                setIsLoading(true);
+                tryLogin(props.navigation, setIsLoading, {username, password, ent, schoolRNE, schoolName});
+                setTimeout(() => setIsLoading(false), 10000);
+            }}>
+                <Text style={styles.buttonText}>Se Connecter</Text>
+            </Pressable>;
 
     if (entData.length === 0) (async (): Promise<void> => setENTData(await getCAS()))();
 
@@ -111,7 +111,7 @@ export default function Login(props: any): JSX.Element {
                     secureTextEntry={true}
                     value={password}
                     onChangeText={(newValue) => setPassword(newValue)}
-                    cursorColor={'green'}
+                    cursorColor='green'
                 />
                 <View style={{padding: 10}}>
                     {renderENT()}
@@ -157,9 +157,11 @@ export default function Login(props: any): JSX.Element {
                                         setSchoolsData(data);
                                     });
                                 }}
+                                enablesReturnKeyAutomatically
+                                autoComplete='postal-code'
                                 autoCorrect={false}
                                 keyboardType='number-pad'
-                                placeholder={"Entrer le code postal de l'établissement"}
+                                placeholder="Entrer le code postal de l'établissement"
                                 placeholderTextColor="gray"
                             />
                         }}
@@ -298,7 +300,7 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 5,
         borderRadius: 20,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: '#23ac3f'
     },
     buttonText: {

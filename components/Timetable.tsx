@@ -17,44 +17,40 @@ export type Lesson = {
     room: string;
 }
 
-export default function Timetable(props: { timetable: Lesson[], friendName: string }): JSX.Element {
-    return (
-        <ScrollView style={{backgroundColor: 'white'}}>
-            {props.timetable.length > 0 ? props.timetable.map((element) => {
-                const renderStatus = (): JSX.Element | undefined => {
-                    if (!element.status) return;
-                    return (<Text
-                        style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>);
+export default function Timetable(props: { timetable: Lesson[], name: string }): JSX.Element {
+    return <ScrollView style={{backgroundColor: 'white'}}>
+        {props.timetable.length > 0 ? props.timetable.map((element) => {
+            const renderStatus = (): JSX.Element | undefined => {
+                if (!element.status) return;
+                return <Text
+                    style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>;
 
-                }
-                const renderHour = (): string => {
-                    const date = new Date(element.from);
-                    return `${date.getHours()}h${date.getMinutes()}`;
-                }
-                return (
-                    <Card key={element.id}
-                          style={[{backgroundColor: 'white'}, (element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
-                        <View style={styles.cours}>
-                            <View style={styles.heures}>
-                                <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
-                                <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
-                            </View>
-                            <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
-                            <View style={styles.infos}>
-                                <Text style={styles.matiere}>{element.subject}</Text>
-                                <Text>{element.teacher}</Text>
-                                <Text>{element.room}</Text>
-                            </View>
-                            {renderStatus()}
+            }
+            const renderHour = (): string => {
+                const date = new Date(element.from);
+                return `${date.getHours()}h${date.getMinutes()}`;
+            }
+            return <Card key={element.id}
+                      style={[{backgroundColor: 'white'}, (element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
+                    <View style={styles.cours}>
+                        <View style={styles.heures}>
+                            <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
+                            <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
                         </View>
-                    </Card>
-                );
-            }) : <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
-                <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{props.friendName}</Text> n'a
-                    pas de cours pour aujourd'hui.</Text>
-            </Card>}
-        </ScrollView>
-    );
+                        <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
+                        <View style={styles.infos}>
+                            <Text style={styles.matiere}>{element.subject}</Text>
+                            <Text>{element.teacher}</Text>
+                            <Text>{element.room}</Text>
+                        </View>
+                        {renderStatus()}
+                    </View>
+                </Card>;
+        }) : <Card style={{top: 250, padding: 5, marginHorizontal: 10}}>
+            <Text style={{textAlign: 'center'}}><Text style={{fontWeight: 'bold'}}>{props.name}</Text> n'a
+                pas de cours pour aujourd'hui.</Text>
+        </Card>}
+    </ScrollView>;
 }
 
 const styles = StyleSheet.create({
@@ -103,5 +99,4 @@ const styles = StyleSheet.create({
         width: 300,
         marginLeft: 8,
     },
-
 })
