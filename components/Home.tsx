@@ -4,7 +4,7 @@ import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
 export default function Home({route, navigation}: NativeStackScreenProps<any, "Home">): JSX.Element {
     return <View style={styles.app}>
-        <Navigation route={route} navigation={navigation} friends={[]}/>
+        <Navigation route={route} navigation={navigation} friends={route.params?.friends ?? []}/>
     </View>;
 }
 

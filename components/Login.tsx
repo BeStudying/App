@@ -122,6 +122,7 @@ export default function Login(props: any): JSX.Element {
                             isFocusENT && {borderColor: 'blue'}]}
                         iconStyle={[styles.iconStyle, isFocusENT && {tintColor: 'green'}]}
                         data={entData}
+                        placeholder='...'
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
