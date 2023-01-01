@@ -35,7 +35,7 @@ export async function login(username, password, ent, school) {
  */
 export async function query(type, session, targetINE) {
     const response = await fetch(`https://bestudying.fr/pronote/${type}?session=${session}&target=${targetINE}`);
-    return await response.json();
+    return response.status ? await response.json() : null;
 }
 
 /**

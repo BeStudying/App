@@ -20,22 +20,23 @@ export type Lesson = {
 export default function Timetable(props: { timetable: Lesson[], name: string }): JSX.Element {
     return <ScrollView style={{backgroundColor: 'white'}}>
         {props.timetable.length > 0 ? props.timetable.map((element) => {
+            if(element.isCancelled && element.hasDuplicate) return;
             const renderStatus = (): JSX.Element | undefined => {
                 if (!element.status) return;
                 return <Text
                     style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>;
 
             }
-            const renderHour = (): string => {
-                const date = new Date(element.from);
-                return `${date.getHours()}h${date.getMinutes()}`;
+            const renderHour = (timestamp: number): string => {
+                const date = new Date(timestamp);
+                return `${date.getUTCHours()}h${date.getUTCMinutes()}`;
             }
             return <Card key={element.id}
                       style={[{backgroundColor: 'white'}, (element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
                     <View style={styles.cours}>
                         <View style={styles.heures}>
-                            <Text style={{textAlign: 'right'}}>{renderHour()}</Text>
-                            <Text style={{textAlign: 'right', marginTop: 35}}>10h20</Text>
+                            <Text style={{textAlign: 'right'}}>{renderHour(element.from)}</Text>
+                            <Text style={{textAlign: 'right', marginTop: 35}}>{renderHour(element.to)}</Text>
                         </View>
                         <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
                         <View style={styles.infos}>

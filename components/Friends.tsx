@@ -7,6 +7,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import type {DrawerScreenProps} from '@react-navigation/drawer';
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList,} from '@react-navigation/drawer';
 import type {BottomTabScreenProps} from "@react-navigation/bottom-tabs";
+import * as React from 'react';
 import {useState} from 'react';
 import {
     Image,
@@ -24,6 +25,7 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {query} from "../api/PronoteAPI.mjs";
 import {Card} from 'react-native-paper';
+import DrawerToggleButton from "@react-navigation/drawer/src/views/DrawerToggleButton";
 
 const Drawer = createDrawerNavigator();
 const TopTab = createMaterialTopTabNavigator();
@@ -139,17 +141,19 @@ const FriendHomeworks = ({route}: MaterialTopTabScreenProps<any, string>): JSX.E
 
 const Friend = function ({route}: DrawerScreenProps<any>): JSX.Element {
     LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
+    const date: Date = new Date();
     return <TopTab.Navigator initialRouteName="Timetable" screenOptions={{
         animationEnabled: false,
         tabBarIndicatorStyle: {
             backgroundColor: 'green'
         }
     }}>
-        <TopTab.Screen name="Marks" options={{tabBarLabel: 'Notes'}} component={FriendMarks}
-                       initialParams={route.params}/>
-        <TopTab.Screen name="Timetable" options={{tabBarLabel: 'EDT'}} component={FriendTimetable}
-                       initialParams={route.params}/>
-        <TopTab.Screen name="Homeworks" options={{tabBarLabel: 'Devoirs'}} component={FriendHomeworks}
+        <TopTab.Screen name="Timetable" options={{
+            tabBarLabelStyle: {
+                right: -155
+            }, tabBarLabel: `${date.getUTCDate()}/${date.getUTCMonth() + 1}`
+        }}
+                       component={FriendTimetable}
                        initialParams={route.params}/>
     </TopTab.Navigator>;
 }
@@ -173,10 +177,10 @@ export default function Friends({route}: BottomTabScreenProps<any, 'Amis'>): JSX
                     setHasFetchProfile(true);
                 });
 
-                query("photo", id, friendINE).then(url => {
+/*                query("photo", id, friendINE).then(url => {
                     setProfilePicture(url);
                     setHasFetchProfile(true);
-                });
+                });*/
             }
 
             return <Drawer.Screen name={nom} key={friendINE} component={Friend}
@@ -196,8 +200,13 @@ export default function Friends({route}: BottomTabScreenProps<any, 'Amis'>): JSX
         screenOptions={{
             drawerActiveTintColor: '#109e00',
             drawerActiveBackgroundColor: '#ddffd9',
-            headerShown: false,
-            drawerType: 'front'
+            headerShown: true,
+            headerLeft: () => <DrawerToggleButton pressOpacity={0.5} tintColor='green'/>,
+            headerTransparent: true,
+            drawerType: 'front',
+            lazy: false,
+            swipeEdgeWidth: 1000,
+            swipeMinDistance: 0,
         }}
         defaultStatus={route.params?.friends.length ?? 0 > 0 ? 'closed' : 'open'}
     >
