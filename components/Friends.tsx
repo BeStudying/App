@@ -141,7 +141,6 @@ const FriendHomeworks = ({route}: MaterialTopTabScreenProps<any, string>): JSX.E
 
 const Friend = function ({route}: DrawerScreenProps<any>): JSX.Element {
     LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered.']); // TODO: À retirer si tu sais d'où sa vient
-    const date: Date = new Date();
     return <TopTab.Navigator initialRouteName="Timetable" screenOptions={{
         animationEnabled: false,
         tabBarIndicatorStyle: {
@@ -151,7 +150,7 @@ const Friend = function ({route}: DrawerScreenProps<any>): JSX.Element {
         <TopTab.Screen name="Timetable" options={{
             tabBarLabelStyle: {
                 right: -155
-            }, tabBarLabel: `${date.getUTCDate()}/${date.getUTCMonth() + 1}`
+            }, tabBarLabel: new Date().toLocaleDateString().split('/').slice(0, -1).join('/')
         }}
                        component={FriendTimetable}
                        initialParams={route.params}/>
@@ -177,10 +176,10 @@ export default function Friends({route}: BottomTabScreenProps<any, 'Amis'>): JSX
                     setHasFetchProfile(true);
                 });
 
-/*                query("photo", id, friendINE).then(url => {
+                query("photo", id, friendINE).then(url => {
                     setProfilePicture(url);
                     setHasFetchProfile(true);
-                });*/
+                });
             }
 
             return <Drawer.Screen name={nom} key={friendINE} component={Friend}

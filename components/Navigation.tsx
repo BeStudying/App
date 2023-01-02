@@ -3,10 +3,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Alert} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Friends from './Friends';
-import Self from './Self';
-import {ping, query} from "../api/PronoteAPI.mjs";
+import Tools from './Tools';
+import {ping} from "../api/PronoteAPI.mjs";
 import {DrawerActions} from "@react-navigation/native";
 import type {NativeStackScreenProps} from "@react-navigation/native-stack";
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Points from './Points';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,15 +48,18 @@ export default function Navigation({route, navigation, friends}: NativeStackScre
         });
     }
 
-    return <Tab.Navigator initialRouteName='Moi' screenOptions={{
+    return <Tab.Navigator initialRouteName='Points' screenOptions={{
         tabBarActiveTintColor: 'green',
         headerShown: false
     }}>
         <Tab.Screen name='Amis' component={Friends} initialParams={{id, friends}} options={{
             tabBarIcon: ({color, size}) => <FontAwesome name='users' color={color} size={size}/>
         }}/>
-        <Tab.Screen name='Moi' component={Self} initialParams={{id}} options={{
-            tabBarIcon: ({color, size}) => <FontAwesome name='user' color={color} size={size}/>
+        <Tab.Screen name='Points' component={Points} initialParams={{id}} options={{
+            tabBarIcon: ({color, size}) => <AntDesign name={'star'} color={color} size={20}/>
+        }}/>
+        <Tab.Screen name='Outils' component={Tools} initialParams={{id}} options={{
+            tabBarIcon: ({color, size}) => <MaterialCommunityIcons name='toolbox' color={color} size={size}/>
         }}/>
     </Tab.Navigator>;
 }

@@ -198,23 +198,16 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
     schoolRNE,
     schoolName
 }: { username: string, password: string, ent?: string, schoolRNE?: string, schoolName?: string }): Promise<void> {
-    if (!username) {
+    const error = (e: string): void => {
         loadingCallback(false);
-        Alert.alert("Connexion impossible", "Vous devez entrer un nom d'utilisateur.");
-        return;
-    } else if (!password) {
-        loadingCallback(false);
-        Alert.alert("Connexion impossible", "Vous devez entrer un mot de passe.");
-        return;
-    } else if (!ent) {
-        loadingCallback(false);
-        Alert.alert("Connexion impossible", "Vous devez sélectionner un ENT.");
-        return;
-    } else if (!schoolRNE) {
-        loadingCallback(false);
-        Alert.alert("Connexion impossible", "Vous devez sélectionner un établissement.");
-        return;
+        Alert.alert("Connexion impossible", e);
     }
+
+    if (!username) return error("Vous devez entrer un nom d'utilisateur.");
+    else if (!password) return error("Vous devez entrer un mot de passe.");
+    else if (!ent) return error("Vous devez sélectionner un ENT.");
+    else if (!schoolRNE) return error("Vous devez sélectionner un établissement.");
+
     const id = await login(username, password, ent, schoolRNE);
     if (id > 0) {
         const friends: string[] = await query('friends', id, null);
@@ -228,11 +221,8 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
         await AsyncStorage.setItem('ent', ent);
         await AsyncStorage.setItem('schoolRNE', schoolRNE);
         if (schoolName) await AsyncStorage.setItem('schoolName', schoolName);
-    } else if (!id) {
-        Alert.alert("Connexion au serveur refusée", "Identifiant et/ou mot de passe invalide(s).");
-    } else {
-        Alert.alert("Échec de la connexion", "Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
-    }
+    } else if (!id) Alert.alert("Connexion au serveur refusée", "Identifiant et/ou mot de passe invalide(s).");
+    else Alert.alert("Échec de la connexion", "Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
     loadingCallback(false);
 }
 
