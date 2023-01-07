@@ -18,7 +18,9 @@ let id: number | undefined = undefined;
 
 export default function Navigation({route, navigation, friends}: NativeStackScreenProps<any> & { friends: string[] }):
     JSX.Element | null {
-    id ??= route.params?.id;
+    if(id === undefined){
+        id = route.params?.id
+    }
     useEffect(() => navigation.setOptions({
         headerLeft: (): JSX.Element => <FontAwesome.Button name='address-book' backgroundColor={'green'}
                                                            onPress={() => {
