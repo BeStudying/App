@@ -9,19 +9,18 @@ export async function getCAS() {
 /**
  * @param {string} username 
  * @param {string} password 
- * @param {string} ent 
- * @param {string} school 
+ * @param {string} school
  * @returns {Promise<number>}
  */
-export async function login(username, password, ent, school) {
-    const response = await fetch(`https://bestudying.fr/pronote/login?username=${username}&password=${password}&rne=${school}&cas=${ent}`);
+export async function login(username, password, school) {
+    const response = await fetch(`https://bestudying.fr/pronote/login?username=${username}&password=${password}&rne=${school}`);
     switch(response.status){
         case 200:
             return parseInt(await response.json());
         case 403:
             return 0;
         case 100:
-            return login(username, password, school, ent);
+            return login(username, password, school);
         default:
             return -1;
     }

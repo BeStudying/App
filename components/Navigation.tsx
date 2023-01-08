@@ -8,9 +8,9 @@ import {ping} from "../api/PronoteAPI.mjs";
 import {DrawerActions} from "@react-navigation/native";
 import type {NativeStackScreenProps} from "@react-navigation/native-stack";
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import Points from './Points';
+import Sponsor from './Sponsor';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,8 +60,8 @@ export default function Navigation({route, navigation, friends}: NativeStackScre
         <Tab.Screen name='Points' component={Points} initialParams={{id}} options={{
             tabBarIcon: ({color, size}) => <AntDesign name={'star'} color={color} size={20}/>
         }}/>
-        <Tab.Screen name='Outils' component={Tools} initialParams={{id}} options={{
-            tabBarIcon: ({color, size}) => <MaterialCommunityIcons name='toolbox' color={color} size={size}/>
+        <Tab.Screen name='Parrainage' component={Sponsor} initialParams={{id}} options={{
+            tabBarIcon: ({color, size}) => <Fontisto name={'share'} color={color} size={20}/>
         }}/>
     </Tab.Navigator>;
 }

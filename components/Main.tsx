@@ -1,17 +1,13 @@
 import {StyleSheet, View} from 'react-native';
 import Login from './Login';
-import {DrawerScreenProps} from "@react-navigation/drawer";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
-const Show = (props: { login: boolean; navigation: object }): JSX.Element => <View style={styles.app}>
-    <View style={{paddingBottom: '50%'}}/>
-    <Login navigation={props.navigation}/>
-</View>;
-
-
-export default function Main({navigation}: DrawerScreenProps<any, "Main">): JSX.Element {
-    return <Show login={true} navigation={navigation}/>;
+export default function Main(): JSX.Element {
+    return <View style={styles.app}>
+        <View style={{paddingBottom: '50%'}}/>
+        <Login/>
+    </View>;
 }
-
 
 const styles = StyleSheet.create({
     app: {
