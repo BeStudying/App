@@ -57,11 +57,5 @@ export default function Navigation({route, navigation, friends}: NativeStackScre
         <Tab.Screen name='Amis' component={Friends} initialParams={{id, friends}} options={{
             tabBarIcon: ({color, size}) => <FontAwesome name='users' color={color} size={size}/>
         }}/>
-        <Tab.Screen name='Points' component={Points} initialParams={{id}} options={{
-            tabBarIcon: ({color, size}) => <AntDesign name={'star'} color={color} size={20}/>
-        }}/>
-        <Tab.Screen name='Parrainage' component={Sponsor} initialParams={{id}} options={{
-            tabBarIcon: ({color, size}) => <Fontisto name={'share'} color={color} size={20}/>
-        }}/>
     </Tab.Navigator>;
 }

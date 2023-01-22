@@ -20,14 +20,14 @@ export type Lesson = {
 export default function Timetable(props: { timetable: Lesson[], name: string }): JSX.Element {
     return <ScrollView style={{backgroundColor: 'white'}}>
         {props.timetable.length > 0 ? props.timetable.map((element) => {
-            if(element.isCancelled && element.hasDuplicate) return;
+            if((element.isCancelled || element.isAway) && (element.hasDuplicate || props.timetable.find(e => e.from === element.from && !e.isCancelled && !e.isAway))) return;
             const renderStatus = (): JSX.Element | undefined => {
                 if (!element.status) return;
                 return <Text
                     style={[styles.status, (!element.isCancelled && !element.isAway) && {backgroundColor: '#6ec2f8'}]}>{element.status}</Text>;
 
             }
-            const renderHour = (timestamp: number): string => {
+            const renderHour = (timestamp: number, end: boolean): string => {
                 const date = new Date(timestamp);
                 return `${date.getUTCHours()}h${date.getUTCMinutes()}`;
             }
@@ -35,8 +35,8 @@ export default function Timetable(props: { timetable: Lesson[], name: string }):
                       style={[{backgroundColor: 'white'}, (element.isCancelled || element.isAway) && {backgroundColor: '#f6f6f6'}]}>
                     <View style={styles.cours}>
                         <View style={styles.heures}>
-                            <Text style={{textAlign: 'right'}}>{renderHour(element.from)}</Text>
-                            <Text style={{textAlign: 'right', marginTop: 35}}>{renderHour(element.to)}</Text>
+                            <Text style={{textAlign: 'right'}}>{renderHour(element.from, false)}</Text>
+                            <Text style={{textAlign: 'right', marginTop: 35}}>{renderHour(element.to, true)}</Text>
                         </View>
                         <View style={[styles.couleurMatiere, {backgroundColor: element.color}]}/>
                         <View style={styles.infos}>

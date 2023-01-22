@@ -1,5 +1,6 @@
 import type {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {Pressable, SafeAreaView, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -57,12 +58,14 @@ export default function Settings({navigation}: NativeStackScreenProps<any, 'Sett
             <Pressable style={({pressed}): StyleProp<ViewStyle> => [styles.button, {
                 marginTop: 50, backgroundColor: 'rgba(255,66,66,0.87)', borderColor: 'black'
             }, pressed && {backgroundColor: 'rgba(255,66,66,0.65)'}]}
-                       onPress={() => {
-                           navigation.popToTop();
-                           navigation.navigate('Main');
-                           navigation.reset({
-                               index: 0,
-                               routes: [{name: 'Main'}],
+                       onPress={(): void => {
+                           AsyncStorage.clear(() => {
+                               navigation.popToTop();
+                               navigation.navigate('Main');
+                               navigation.reset({
+                                   index: 0,
+                                   routes: [{name: 'Main'}],
+                               });
                            });
                        }}>
                 <Text style={[styles.buttonText, {textAlign: 'center', color: 'white'}]}>Déconnexion</Text>

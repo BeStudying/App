@@ -5,6 +5,7 @@ import {useState} from 'react';
 import {
     ActivityIndicator,
     Alert,
+    Platform,
     Pressable,
     StyleProp,
     StyleSheet,
@@ -15,7 +16,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getSchools from '../api/EducationAPI.mjs';
-import {login, query} from '../api/PronoteAPI.mjs';
+import {login, loginMobile, loginQr, query} from '../api/PronoteAPI.mjs';
 import {Dropdown} from 'react-native-element-dropdown';
 import type {NativeStackNavigationProp, NativeStackScreenProps} from "@react-navigation/native-stack";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
@@ -25,8 +26,34 @@ import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs
 import {Card} from 'react-native-paper';
 import type {BarCodeEvent} from "expo-barcode-scanner";
 import {BarCodeScanner} from "expo-barcode-scanner";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const TopTab = createMaterialTopTabNavigator();
+
+type PronoteQrCode = {
+    jeton?: string,
+    login?: string,
+    url?: string
+}
+
+type LoginMobileRequest = {
+    url: string,
+    identifiant: string,
+    uuid: string,
+    jeton: string
+}
+
+type LoginMobileResponse = {
+    id: number,
+    jeton: string
+}
+
+type LoginQrResponse = {
+    id: number,
+    identifiant: string,
+    uuid: string,
+    jeton: string,
+}
 
 export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Element {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -38,14 +65,39 @@ export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Ele
     })();
 
     const handleBarCodeScanned = ({data}: BarCodeEvent) => {
-        const error = (e: string): void => Alert.alert('Erreur lors du Scan', e);
+        const error = (e: string): void => {
+            Alert.alert('Erreur lors du Scan', e);
+        }
         setScanned(true);
         try {
-            const auth: { jeton?: string, login?: string, url?: string } = JSON.parse(data);
-            if (auth?.jeton && auth.login && auth?.url) {
+            const auth: PronoteQrCode = JSON.parse(data);
+            if (auth?.jeton && auth?.login && auth?.url) {
                 navigation.popToTop();
-                navigation.navigate('Main', JSON.parse(data));
-                Alert.prompt("Vérification", "Veuillez entrer le code PIN fournis avec votre QR Code", undefined, 'plain-text', undefined, 'number-pad');
+                setScanned(false);
+                if (Platform.OS === 'ios') {
+                    setTimeout(() => Alert.prompt('Vérification', "Veuillez entrer le code PIN fournis avec votre QR Code", handlePin, 'plain-text', undefined, 'number-pad'), 0);
+                    const handlePin = (pin: string): void => {
+                        if (!pin) return;
+                        else if (pin.length < 4) return error('Le code PIN doit faire 4 caractères.')
+                        else if (pin.length > 4) pin = pin.slice(0, 4);
+                        loginQr(auth, parseInt(pin)).then((res: LoginQrResponse & { url: string }): void => {
+                            if (res.id > 0) {
+                                query('friends', res.id, null).then((friends: string[]): void => {
+                                    navigation.navigate('Home', {id: res.id, friends});
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{name: 'Home', params: {id: res.id, friends}}],
+                                    });
+                                    AsyncStorage.setItem('url', res.url);
+                                    AsyncStorage.setItem('identifiant', res.identifiant);
+                                    AsyncStorage.setItem('uuid', res.uuid);
+                                    AsyncStorage.setItem('jeton', res.jeton);
+                                });
+                            } else if (!res.id) error('Le code PIN est invalide et/ou le QR Code a expiré.');
+                            else error("Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
+                        });
+                    }
+                }
             } else error("Le QR Code scanné est malformé.");
         } catch (e) {
             error("Ce QR Code est inconnu.");
@@ -58,39 +110,37 @@ export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Ele
         return <Text> Veuillez nous donner l'accès à votre caméra.</Text>;
     }
 
-    return (
-        <View style={styles.qrcode}>
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+    return <View style={styles.qrcode}>
+        <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+        />
+        <View style={{
+            marginHorizontal: 50,
+            padding: 100,
+            paddingTop: 150,
+            borderColor: 'green',
+            borderWidth: 7,
+            backgroundColor: 'transparent',
+            zIndex: 10000
+        }}>
             <View style={{
-                marginHorizontal: 50,
-                padding: 100,
-                paddingTop: 150,
-                borderColor: 'green',
-                borderWidth: 7,
+                borderColor: 'red',
+                borderWidth: 3,
+                justifyContent: 'center',
+                alignContent: 'center',
+                width: 261,
+                right: 100,
+                bottom: 25,
                 backgroundColor: 'transparent',
-                zIndex: 10000
-            }}>
-                <View style={{
-                    borderColor: 'red',
-                    borderWidth: 3,
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    width: 261,
-                    right: 100,
-                    bottom: 25,
-                    backgroundColor: 'transparent',
-                    zIndex: 1000,
-                }}/>
-            </View>
+                zIndex: 1000,
+            }}/>
         </View>
-    );
+    </View>;
 }
-
 const QrLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
     return <Card style={styles.container}>
+        <Spinner visible={false} textContent={'Loading...'}/>
         <Text style={[styles.buttonText, {color: 'black', padding: 5}]}>Accéder à la Caméra</Text>
         <Pressable onPress={(): void => navigation.getParent()?.navigate('Scan')}>
             <FontAwesome5Icon style={{
@@ -228,7 +278,31 @@ const IdLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
     </Card>
 }
 
-export default function Login(): JSX.Element {
+export default function Login({navigation}: { navigation: NativeStackNavigationProp<any> }): JSX.Element {
+    const [tryMobileAuth, setTriedMobileAuth] = useState<boolean>(false);
+    if (!tryMobileAuth) {
+        (async (): Promise<void> => {
+            const url: string | undefined = await AsyncStorage.getItem('url') ?? undefined;
+            const identifiant: string | undefined = await AsyncStorage.getItem('identifiant') ?? undefined;
+            const uuid: string | undefined = await AsyncStorage.getItem('uuid') ?? undefined;
+            const jeton: string | undefined = await AsyncStorage.getItem('jeton') ?? undefined;
+            if (url && identifiant && uuid && jeton) {
+                loginMobile({url, identifiant, uuid, jeton}).then((res: LoginMobileResponse): void => {
+                    if (res.id > 0) {
+                        query('friends', res.id, null).then((friends: string[]): void => {
+                            navigation.navigate('Home', {id: res.id, friends});
+                            navigation.reset({
+                                index: 0,
+                                routes: [{name: 'Home', params: {id: res.id, friends}}],
+                            });
+                            AsyncStorage.setItem('jeton', res.jeton);
+                        });
+                    }
+                });
+            }
+        })();
+        setTriedMobileAuth(true);
+    }
     return <TopTab.Navigator screenOptions={{
         tabBarStyle: {
             shadowColor: "black",
@@ -290,8 +364,8 @@ async function tryLogin(navigation: NativeStackNavigationProp<any>, loadingCallb
         await AsyncStorage.setItem('password', password);
         await AsyncStorage.setItem('schoolRNE', schoolRNE);
         if (schoolName) await AsyncStorage.setItem('schoolName', schoolName);
-    } else if (!id) Alert.alert("Connexion au serveur refusée", "Identifiant et/ou mot de passe invalide(s).");
-    else Alert.alert("Échec de la connexion", "Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
+    } else if (!id) error("Identifiant et/ou mot de passe invalide(s).");
+    else error("Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
     loadingCallback(false);
 }
 
