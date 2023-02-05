@@ -209,7 +209,7 @@ const IdLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
             onFocus={(): void => setIsFocusUsername(true)}
             onBlur={(): void => setIsFocusUsername(false)}
             placeholder="Nom d'Utilisateur"
-            placeholderTextColor="black"
+            placeholderTextColor="gray"
             value={username}
             onChangeText={(newValue) => setUsername(newValue)}
         />
@@ -220,7 +220,7 @@ const IdLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
             onFocus={(): void => setIsFocusPassword(true)}
             onBlur={(): void => setIsFocusPassword(false)}
             placeholder="Mot de Passe"
-            placeholderTextColor="black"
+            placeholderTextColor="gray"
             secureTextEntry={true}
             value={password}
             onChangeText={(newValue) => setPassword(newValue)}
@@ -268,7 +268,7 @@ const IdLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
                 onBlur={(): void => {
                     setIsFocusSchool(false);
                 }}
-                onChange={(item): void => {
+                onChange={(item: any): void => {
                     setSchoolName(item.label);
                     setSchoolRNE(item.value);
                     setIsFocusSchool(false);
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderColor: 'green',
         borderWidth: 0.5,
-        color: 'green',
+        color: 'black',
     },
     dropdown: {
         height: 50,

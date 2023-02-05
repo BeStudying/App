@@ -19,7 +19,7 @@ export default function App() {
     return <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer>
             <Stack.Navigator screenOptions={{
-                title: 'Producation', headerStyle: {
+                title: 'PROMATE', headerStyle: {
                     backgroundColor: 'green',
                 }, headerTintColor: '#fff', headerTitleStyle: {
                     fontWeight: 'bold',
