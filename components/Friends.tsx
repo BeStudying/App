@@ -177,7 +177,7 @@ export default function Friends({route}: BottomTabScreenProps<any, 'Amis'>): JSX
                 });
 
                 query("photo", id, friendINE).then(url => {
-                    setProfilePicture(url);
+                    url && setProfilePicture(url);
                     setHasFetchProfile(true);
                 });
             }

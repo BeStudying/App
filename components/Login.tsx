@@ -26,7 +26,6 @@ import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs
 import {Card} from 'react-native-paper';
 import type {BarCodeEvent} from "expo-barcode-scanner";
 import {BarCodeScanner} from "expo-barcode-scanner";
-import Spinner from 'react-native-loading-spinner-overlay';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -77,6 +76,7 @@ export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Ele
                 if (Platform.OS === 'ios') {
                     setTimeout(() => Alert.prompt('Vérification', "Veuillez entrer le code PIN fournis avec votre QR Code", handlePin, 'plain-text', undefined, 'number-pad'), 0);
                     const handlePin = (pin: string): void => {
+                        navigation.navigate('Main', {loading: true});
                         if (!pin) return;
                         else if (pin.length < 4) return error('Le code PIN doit faire 4 caractères.')
                         else if (pin.length > 4) pin = pin.slice(0, 4);
@@ -95,6 +95,7 @@ export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Ele
                                 });
                             } else if (!res.id) error('Le code PIN est invalide et/ou le QR Code a expiré.');
                             else error("Connexion au serveur impossible. Veuillez réessayer ultérieurement.");
+                            navigation.navigate('Main', {loading: false});
                         });
                     }
                 }
@@ -138,9 +139,9 @@ export function Scan({navigation}: NativeStackScreenProps<any, 'Scan'>): JSX.Ele
         </View>
     </View>;
 }
+
 const QrLogin = ({navigation}: MaterialTopTabScreenProps<any>): JSX.Element => {
     return <Card style={styles.container}>
-        <Spinner visible={false} textContent={'Loading...'}/>
         <Text style={[styles.buttonText, {color: 'black', padding: 5}]}>Accéder à la Caméra</Text>
         <Pressable onPress={(): void => navigation.getParent()?.navigate('Scan')}>
             <FontAwesome5Icon style={{
@@ -287,17 +288,21 @@ export default function Login({navigation}: { navigation: NativeStackNavigationP
             const uuid: string | undefined = await AsyncStorage.getItem('uuid') ?? undefined;
             const jeton: string | undefined = await AsyncStorage.getItem('jeton') ?? undefined;
             if (url && identifiant && uuid && jeton) {
+                navigation.setParams({loading: true});
                 loginMobile({url, identifiant, uuid, jeton}).then((res: LoginMobileResponse): void => {
-                    if (res.id > 0) {
+                    if (!res.id) {
+                        Alert.alert('Echec de la connexion', "La connexion à votre établissement a échouée, veuillez scanner encore une fois le QR Code fournis dans l'application Web.")
+                    } else if (res.id > 0) {
+                        AsyncStorage.setItem('jeton', res.jeton);
                         query('friends', res.id, null).then((friends: string[]): void => {
                             navigation.navigate('Home', {id: res.id, friends});
                             navigation.reset({
                                 index: 0,
                                 routes: [{name: 'Home', params: {id: res.id, friends}}],
                             });
-                            AsyncStorage.setItem('jeton', res.jeton);
                         });
                     }
+                    navigation.setParams({loading: false});
                 });
             }
         })();
