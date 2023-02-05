@@ -50,12 +50,15 @@ export default function Navigation({route, navigation, friends}: NativeStackScre
         });
     }
 
-    return <Tab.Navigator initialRouteName='Points' screenOptions={{
+    return <Tab.Navigator initialRouteName='Amis' screenOptions={{
         tabBarActiveTintColor: 'green',
         headerShown: false
     }}>
         <Tab.Screen name='Amis' component={Friends} initialParams={{id, friends}} options={{
             tabBarIcon: ({color, size}) => <FontAwesome name='users' color={color} size={size}/>
+        }}/>
+        <Tab.Screen name='Points' component={Points} initialParams={{id, friends}} options={{
+            tabBarIcon: ({color, size}) => <FontAwesome name='star' color={color} size={size}/>
         }}/>
     </Tab.Navigator>;
 }
